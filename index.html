@@ -9,6 +9,7 @@
 <link rel="manifest" href="manifest.json"/>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=Inter:wght@400;500;600&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 <script>
 tailwind.config = {
@@ -436,14 +437,27 @@ input[type=number]{-moz-appearance:textfield}
         <input id="tx-date" type="date" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm focus:ring-1 focus:ring-surface-tint/20"/>
       </div>
 
-      <!-- Recurring toggle -->
-      <div class="flex items-center justify-between py-2">
-        <div>
-          <span class="text-sm font-heebo font-bold text-primary">הוראת קבע</span>
-          <span class="block text-xs text-on-surface-variant">חזור על פעולה זו</span>
-        </div>
-        <button type="button" id="recurring-toggle" onclick="toggleRecurring()" class="w-12 h-6 rounded-full bg-outline-variant relative transition-colors">
-          <div id="recurring-thumb" class="absolute top-1 right-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all"></div>
+      <!-- Mode selector: הוראת קבע / תשלומים -->
+      <div id="tx-mode-grid" class="grid grid-cols-1 gap-3">
+        <button type="button" id="mode-btn-recurring" onclick="selectTxMode('recurring')"
+          class="flex items-center gap-3 p-4 rounded-2xl border-2 border-outline-variant/30 bg-surface-container-low text-right transition-all active:scale-95">
+          <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-primary">repeat</span>
+          </div>
+          <div class="flex-1">
+            <span class="text-sm font-bold font-heebo text-primary block">הוראת קבע</span>
+            <span class="text-xs text-on-surface-variant">חזור על פעולה זו</span>
+          </div>
+        </button>
+        <button type="button" id="mode-btn-installments" onclick="selectTxMode('installments')"
+          class="hidden flex items-center gap-3 p-4 rounded-2xl border-2 border-outline-variant/30 bg-surface-container-low text-right transition-all active:scale-95">
+          <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-primary">payments</span>
+          </div>
+          <div class="flex-1">
+            <span class="text-sm font-bold font-heebo text-primary block">תשלומים</span>
+            <span class="text-xs text-on-surface-variant">פרישה לתשלומים</span>
+          </div>
         </button>
       </div>
 
@@ -466,15 +480,9 @@ input[type=number]{-moz-appearance:textfield}
         </div>
       </div>
 
-      <!-- Installments (expense only) -->
-      <div id="installments-section" class="hidden space-y-3 p-4 bg-surface-container-low rounded-2xl">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-heebo font-bold text-primary">תשלומים</span>
-          <button type="button" id="install-toggle" onclick="toggleInstallments()" class="w-12 h-6 rounded-full bg-outline-variant relative transition-colors">
-            <div id="install-thumb" class="absolute top-1 right-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all"></div>
-          </button>
-        </div>
-        <div id="install-fields" class="hidden grid grid-cols-2 gap-3">
+      <!-- Installments fields -->
+      <div id="install-fields" class="hidden space-y-3 p-4 bg-surface-container-low rounded-2xl">
+        <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
             <label class="text-xs font-bold font-heebo text-on-surface-variant">מספר תשלומים</label>
             <input id="tx-installments" type="number" inputmode="numeric" min="2" value="3" placeholder="3" class="w-full bg-surface-container-highest border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr" oninput="updateInstallmentPreview()"/>
@@ -568,12 +576,44 @@ input[type=number]{-moz-appearance:textfield}
     <div class="w-10 h-1 bg-outline-variant/40 rounded-full mx-auto mt-3 mb-2"></div>
     <div class="px-5 pb-8 space-y-4">
       <h2 class="text-xl font-black font-heebo text-primary text-center">קופה חדשה</h2>
-      <div class="space-y-1"><label class="text-xs font-bold font-heebo text-on-surface-variant">שם הקופה</label>
-        <input id="bucket-name" type="text" placeholder="לדוגמה: חופשה ביפן" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm"/></div>
-      <div class="space-y-1"><label class="text-xs font-bold font-heebo text-on-surface-variant">יעד (₪)</label>
-        <input id="bucket-target" type="number" inputmode="decimal" min="0" placeholder="0" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr"/></div>
-      <div class="space-y-1"><label class="text-xs font-bold font-heebo text-on-surface-variant">סכום נוכחי (₪)</label>
-        <input id="bucket-current" type="number" inputmode="decimal" min="0" value="0" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr"/></div>
+      <!-- שם -->
+      <div class="space-y-1">
+        <label class="text-xs font-bold font-heebo text-on-surface-variant">שם הקופה</label>
+        <input id="bucket-name" type="text" placeholder="לדוגמה: חופשה ביפן" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm"/>
+      </div>
+      <!-- סכום הפקדה + מטרה -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="space-y-1">
+          <label class="text-xs font-bold font-heebo text-on-surface-variant">סכום הפקדה (₪)</label>
+          <input id="bucket-deposit" type="number" inputmode="decimal" min="0" value="0" placeholder="0" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr"/>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-bold font-heebo text-on-surface-variant">מטרה (₪) <span class="font-normal opacity-50">רשות</span></label>
+          <input id="bucket-target" type="number" inputmode="decimal" min="0" placeholder="ללא מטרה" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr"/>
+        </div>
+      </div>
+      <!-- קרן כספית -->
+      <div class="space-y-2 p-4 bg-surface-container-low rounded-2xl">
+        <p class="text-xs font-bold font-heebo text-primary flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">monitoring</span>קרן כספית
+        </p>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-bold font-heebo text-on-surface-variant">שם הקרן</label>
+            <input id="bucket-fund-name" type="text" placeholder="לדוגמה: מגדל" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm"/>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-bold font-heebo text-on-surface-variant">מס׳ קרן</label>
+            <input id="bucket-fund-number" type="text" inputmode="numeric" placeholder="1234567" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr"/>
+          </div>
+        </div>
+      </div>
+      <!-- תאריך -->
+      <div class="space-y-1">
+        <label class="text-xs font-bold font-heebo text-on-surface-variant">תאריך הפעולה</label>
+        <input id="bucket-date" type="date" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm"/>
+      </div>
+      <!-- אייקון -->
       <div class="space-y-1">
         <label class="text-xs font-bold font-heebo text-on-surface-variant">אייקון</label>
         <div id="bucket-icon-picker" class="flex flex-wrap gap-2">
@@ -587,7 +627,7 @@ input[type=number]{-moz-appearance:textfield}
           <button type="button" onclick="selectIcon(this,'savings')" class="icon-btn w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">savings</span></button>
         </div>
       </div>
-      <button onclick="saveBucket()" class="w-full signature-gradient text-white font-heebo font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform">יצירת קופה</button>
+      <button onclick="saveBucket()" class="w-full signature-gradient text-white font-heebo font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform">צור קופה</button>
     </div>
   </div>
 </div>
@@ -598,13 +638,74 @@ input[type=number]{-moz-appearance:textfield}
   <div id="edit-bucket-sheet" class="modal-sheet absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl max-h-[92vh] overflow-y-auto">
     <div class="w-10 h-1 bg-outline-variant/40 rounded-full mx-auto mt-3 mb-2"></div>
     <div class="px-5 pb-8 space-y-4">
-      <h2 class="text-xl font-black font-heebo text-primary text-center">עדכון קופה</h2>
+      <div class="flex justify-between items-center">
+        <button onclick="openBucketHistory()" class="w-9 h-9 rounded-xl bg-surface-container-high flex items-center justify-center text-on-surface-variant active:scale-90 transition-transform">
+          <span class="material-symbols-outlined text-xl">history</span>
+        </button>
+        <h2 id="edit-bucket-title" class="text-xl font-black font-heebo text-primary text-center">עדכון קופה</h2>
+        <div class="w-9"></div>
+      </div>
       <input id="edit-bucket-id" type="hidden"/>
-      <div class="space-y-1"><label class="text-xs font-bold font-heebo text-on-surface-variant">הוסף / הפחת (₪)</label>
-        <input id="edit-bucket-amount" type="number" inputmode="decimal" placeholder="0" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-lg" dir="ltr"/></div>
-      <p class="text-xs text-on-surface-variant">מספר חיובי להוספה, שלילי להפחתה</p>
+      <!-- Deposit / Withdrawal toggle -->
+      <div class="grid grid-cols-2 gap-3">
+        <button type="button" id="bucket-op-deposit" onclick="selectBucketOp('deposit')" class="flex flex-col items-center gap-2 py-4 rounded-2xl border-2 border-primary bg-primary/5 transition-all active:scale-95">
+          <span class="material-symbols-outlined text-2xl text-primary">add_circle</span>
+          <span class="font-heebo font-bold text-sm text-primary">הפקדה</span>
+        </button>
+        <button type="button" id="bucket-op-withdrawal" onclick="selectBucketOp('withdrawal')" class="flex flex-col items-center gap-2 py-4 rounded-2xl border-2 border-outline-variant/30 bg-surface-container-low transition-all active:scale-95">
+          <span class="material-symbols-outlined text-2xl text-on-surface-variant">remove_circle</span>
+          <span class="font-heebo font-bold text-sm text-on-surface-variant">משיכה</span>
+        </button>
+      </div>
+      <div class="space-y-1">
+        <label class="text-xs font-bold font-heebo text-on-surface-variant">סכום (₪)</label>
+        <input id="edit-bucket-amount" type="number" inputmode="decimal" placeholder="0" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-lg" dir="ltr"/>
+      </div>
       <button onclick="updateBucket()" class="w-full signature-gradient text-white font-heebo font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform">עדכן</button>
       <button onclick="deleteBucket()" class="w-full border-2 border-error text-error font-heebo font-bold py-3 rounded-xl active:scale-95 transition-transform">מחק קופה</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BUCKET HISTORY MODAL ═══ -->
+<div id="bucket-history-modal" class="fixed inset-0 z-[80] hidden">
+  <div class="modal-backdrop absolute inset-0" onclick="closeBucketHistory()"></div>
+  <div id="bucket-history-sheet" class="modal-sheet absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl max-h-[92vh] overflow-y-auto">
+    <div class="w-10 h-1 bg-outline-variant/40 rounded-full mx-auto mt-3 mb-2"></div>
+    <div class="px-5 pb-8 space-y-4">
+      <!-- Header -->
+      <div class="flex items-center gap-3">
+        <button onclick="closeBucketHistory()" class="w-9 h-9 rounded-xl bg-surface-container-high flex items-center justify-center text-on-surface-variant active:scale-90 transition-transform">
+          <span class="material-symbols-outlined text-xl">arrow_forward</span>
+        </button>
+        <h2 id="bucket-history-title" class="text-xl font-black font-heebo text-primary flex-1 text-center"></h2>
+        <div class="w-9"></div>
+      </div>
+      <!-- Stats -->
+      <div class="grid grid-cols-3 gap-2">
+        <div class="bg-surface-container-high rounded-2xl p-3 text-center">
+          <p class="text-xs text-on-surface-variant font-heebo mb-1">יתרה</p>
+          <p id="bh-current" class="font-bold text-primary font-heebo text-sm"></p>
+        </div>
+        <div class="bg-surface-container-high rounded-2xl p-3 text-center">
+          <p class="text-xs text-on-surface-variant font-heebo mb-1">מטרה</p>
+          <p id="bh-target" class="font-bold text-primary font-heebo text-sm"></p>
+        </div>
+        <div class="bg-surface-container-high rounded-2xl p-3 text-center">
+          <p class="text-xs text-on-surface-variant font-heebo mb-1">אחוז</p>
+          <p id="bh-pct" class="font-bold text-primary font-heebo text-sm"></p>
+        </div>
+      </div>
+      <!-- Chart -->
+      <div id="bucket-chart-wrap" class="bg-surface-container-high rounded-2xl p-3">
+        <svg id="bucket-chart-svg" width="100%" height="130" viewBox="0 0 300 130" preserveAspectRatio="none"></svg>
+        <p id="bucket-chart-empty" class="hidden text-center text-sm text-on-surface-variant font-heebo py-6">אין פעולות עדיין</p>
+      </div>
+      <!-- History -->
+      <div>
+        <h3 class="text-sm font-bold font-heebo text-on-surface-variant mb-2">היסטוריית פעולות</h3>
+        <div id="bucket-tx-history" class="space-y-2"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -643,22 +744,67 @@ input[type=number]{-moz-appearance:textfield}
 
 <script>
 // ══════════════════════════════════════════
-// STORAGE
+// SUPABASE + STORAGE
 // ══════════════════════════════════════════
-const SK = { tx:'shefa_tx', buckets:'shefa_buckets', config:'shefa_config', loans:'shefa_loans', categories:'shefa_cats' };
+const SUPA_URL = 'https://gzljbjjitfpcfoysxnwb.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6bGpiamppdGZwY2ZveXN4bndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNzQ5NjMsImV4cCI6MjA5MTc1MDk2M30.p09bg0y1f-J0G9qNQ0CyKA3YMp_PPtPN096EAHwZTfk';
+const supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
 const def_cfg = { bankBalance:0, profitRate:10, pinCode:'', currency:'ILS' };
 const def_cats = ['מזון','פנאי','מגורים','תחבורה','בריאות','חינוך','משכורת','עסקים','חיסכון','אחר'];
 
-function getConfig(){ try{ return {...def_cfg,...JSON.parse(localStorage.getItem(SK.config)||'{}')} }catch{return{...def_cfg}} }
-function saveConfig(c){ localStorage.setItem(SK.config,JSON.stringify(c)) }
-function getTx(){ try{ return JSON.parse(localStorage.getItem(SK.tx)||'[]') }catch{return[]} }
-function saveTxs(t){ localStorage.setItem(SK.tx,JSON.stringify(t)) }
-function getBuckets(){ try{ return JSON.parse(localStorage.getItem(SK.buckets)||'[]') }catch{return[]} }
-function saveBuckets(b){ localStorage.setItem(SK.buckets,JSON.stringify(b)) }
-function getLoans(){ try{ return JSON.parse(localStorage.getItem(SK.loans)||'[]') }catch{return[]} }
-function saveLoans(l){ localStorage.setItem(SK.loans,JSON.stringify(l)) }
-function getCategories(){ try{ return JSON.parse(localStorage.getItem(SK.categories)||JSON.stringify(def_cats)) }catch{return def_cats} }
-function saveCategories(c){ localStorage.setItem(SK.categories,JSON.stringify(c)) }
+// In-memory cache
+let _db = {
+  config: {...def_cfg},
+  transactions: [],
+  loans: [],
+  buckets: [],
+  categories: [...def_cats]
+};
+
+async function loadFromSupabase(){
+  const [cfgRes, txRes, loanRes, bucketRes] = await Promise.all([
+    supa.from('config').select('*').eq('id',1).maybeSingle(),
+    supa.from('transactions').select('*').order('created_at',{ascending:true}),
+    supa.from('loans').select('*').order('created_at',{ascending:true}),
+    supa.from('buckets').select('*').order('created_at',{ascending:true})
+  ]);
+  if(cfgRes.data){
+    _db.config = { bankBalance:cfgRes.data.bank_balance||0, profitRate:cfgRes.data.profit_rate||10, pinCode:cfgRes.data.pin_code||'', currency:cfgRes.data.currency||'ILS' };
+    _db.categories = cfgRes.data.categories || [...def_cats];
+  }
+  if(txRes.data) _db.transactions = txRes.data.map(r=>({ id:r.id, title:r.title, amount:parseFloat(r.amount), type:r.type, category:r.category, date:r.date, isRecurring:r.is_recurring, frequency:r.frequency, endDate:r.end_date, installments:r.installments }));
+  if(loanRes.data) _db.loans = loanRes.data.map(r=>({ id:r.id, purpose:r.purpose, isLeverage:r.is_leverage, disbursementDate:r.disbursement_date, finalRepaymentDate:r.final_repayment_date, interestRate:parseFloat(r.interest_rate)||0, indexationType:r.indexation_type, principalAmount:parseFloat(r.principal_amount) }));
+  if(bucketRes.data) _db.buckets = bucketRes.data.map(r=>({ id:r.id, name:r.name, icon:r.icon, currentAmount:parseFloat(r.current_amount)||0, targetAmount:parseFloat(r.target_amount)||0, fundName:r.fund_name||'', fundNumber:r.fund_number||'', date:r.deposit_date||'', bucketTxs:r.bucket_txs||[] }));
+}
+
+function _txToRow(t){ return { id:t.id, title:t.title, amount:t.amount, type:t.type, category:t.category, date:t.date, is_recurring:t.isRecurring||false, frequency:t.frequency||null, end_date:t.endDate||null, installments:t.installments||null }; }
+function _loanToRow(l){ return { id:l.id, purpose:l.purpose, is_leverage:l.isLeverage||false, disbursement_date:l.disbursementDate, final_repayment_date:l.finalRepaymentDate, interest_rate:l.interestRate||0, indexation_type:l.indexationType||'NONE', principal_amount:l.principalAmount }; }
+function _bucketToRow(b){ return { id:b.id, name:b.name, icon:b.icon||'savings', current_amount:b.currentAmount||0, target_amount:b.targetAmount||0, fund_name:b.fundName||null, fund_number:b.fundNumber||null, deposit_date:b.date||null, bucket_txs:b.bucketTxs||[] }; }
+
+function _syncDiff(table, oldArr, newArr, toRow){
+  const oldIds=new Set(oldArr.map(i=>i.id)), newIds=new Set(newArr.map(i=>i.id));
+  const deleted=[...oldIds].filter(id=>!newIds.has(id));
+  if(deleted.length) supa.from(table).delete().in('id',deleted).then(({error})=>{ if(error) console.error(table+' del:',error); });
+  const upserted=newArr.filter(item=>!oldIds.has(item.id)||JSON.stringify(oldArr.find(o=>o.id===item.id))!==JSON.stringify(item));
+  if(upserted.length) supa.from(table).upsert(upserted.map(toRow)).then(({error})=>{ if(error) console.error(table+' upsert:',error); });
+}
+
+function _syncConfig(c){
+  supa.from('config').upsert({ id:1, bank_balance:c.bankBalance, profit_rate:c.profitRate, pin_code:c.pinCode||'', currency:c.currency||'ILS', categories:_db.categories })
+    .then(({error})=>{ if(error) console.error('config:',error); });
+}
+
+function getConfig(){ return {..._db.config}; }
+function saveConfig(c){ _db.config={...c}; _syncConfig(c); }
+function getTx(){ return [..._db.transactions]; }
+function saveTxs(newTxs){ _syncDiff('transactions',_db.transactions,newTxs,_txToRow); _db.transactions=[...newTxs]; }
+function getBuckets(){ return [..._db.buckets]; }
+function saveBuckets(newBuckets){ _syncDiff('buckets',_db.buckets,newBuckets,_bucketToRow); _db.buckets=[...newBuckets]; }
+function getLoans(){ return [..._db.loans]; }
+function saveLoans(newLoans){ _syncDiff('loans',_db.loans,newLoans,_loanToRow); _db.loans=[...newLoans]; }
+function getCategories(){ return [..._db.categories]; }
+function saveCategories(cats){ _db.categories=[...cats]; _syncConfig(_db.config); }
 
 // ══════════════════════════════════════════
 // CORE ENGINE
@@ -826,6 +972,7 @@ function navigateTo(page){
     const icon = item.querySelector('.material-symbols-outlined');
     if(icon) icon.style.fontVariationSettings = active ? "'FILL' 1" : "'FILL' 0";
   });
+  document.getElementById('fab-btn').style.display = (page==='dashboard'||page==='cashflow') ? '' : 'none';
   if(page==='dashboard') renderDashboard();
   if(page==='cashflow'){ renderCashflow(); if(cashflowTab==='loans') renderLoans(); }
   if(page==='buckets') renderBuckets();
@@ -1076,6 +1223,7 @@ function deleteTx(id){
 let txTypeState = 'income';
 let isRecurring = false;
 let isInstall = false;
+let txModeState = null;
 let selectedIcon = 'account_balance_wallet';
 let isLeverageState = false;
 
@@ -1112,7 +1260,7 @@ function closeTxModal(){
 }
 
 function resetTxForm(){
-  txTypeState='income'; isRecurring=false; isInstall=false;
+  txTypeState='income'; isRecurring=false; isInstall=false; txModeState=null;
   setTxType('income');
   document.getElementById('tx-amount').value='';
   document.getElementById('tx-title').value='';
@@ -1122,16 +1270,36 @@ function resetTxForm(){
   document.getElementById('tx-installments').value='3';
   document.getElementById('tx-interest').value='0';
   document.getElementById('recurring-options').classList.add('hidden');
-  document.getElementById('installments-section').classList.add('hidden');
   document.getElementById('install-fields').classList.add('hidden');
   document.getElementById('installment-preview').classList.add('hidden');
-  // Reset toggles
-  ['recurring-toggle','install-toggle'].forEach(id=>{
+  _resetModeCards();
+}
+
+function _resetModeCards(){
+  ['mode-btn-recurring','mode-btn-installments'].forEach(id=>{
     const el=document.getElementById(id);
-    el.classList.remove('bg-primary'); el.classList.add('bg-outline-variant');
+    if(!el) return;
+    el.classList.remove('border-primary','bg-primary/5');
+    el.classList.add('border-outline-variant/30','bg-surface-container-low');
   });
-  document.getElementById('recurring-thumb').style.cssText='top:.25rem;right:.25rem;left:auto';
-  document.getElementById('install-thumb').style.cssText='top:.25rem;right:.25rem;left:auto';
+}
+
+function selectTxMode(mode){
+  if(txModeState===mode){
+    txModeState=null; isRecurring=false; isInstall=false;
+  } else {
+    txModeState=mode; isRecurring=(mode==='recurring'); isInstall=(mode==='installments');
+  }
+  _resetModeCards();
+  if(txModeState){
+    const btn=document.getElementById('mode-btn-'+txModeState);
+    btn.classList.add('border-primary','bg-primary/5');
+    btn.classList.remove('border-outline-variant/30','bg-surface-container-low');
+  }
+  document.getElementById('recurring-options').classList.toggle('hidden', txModeState!=='recurring');
+  document.getElementById('install-fields').classList.toggle('hidden', txModeState!=='installments');
+  if(txModeState==='installments') updateInstallmentPreview();
+  else document.getElementById('installment-preview').classList.add('hidden');
 }
 
 function setTxType(type){
@@ -1141,26 +1309,21 @@ function setTxType(type){
   expBtn.className=`btn-type btn-expense flex-1 py-3 px-4 rounded-xl text-sm font-heebo transition-all flex items-center justify-center gap-2${type==='expense'?' active':''}`;
   if(type==='income'){ incBtn.classList.add('active'); expBtn.classList.remove('active'); }
   else { expBtn.classList.add('active'); incBtn.classList.remove('active'); }
-  // Show installments section only for expenses
-  document.getElementById('installments-section').classList.toggle('hidden', type!=='expense');
-}
-
-function toggleRecurring(){
-  isRecurring=!isRecurring;
-  const track=document.getElementById('recurring-toggle'), thumb=document.getElementById('recurring-thumb');
-  track.classList.toggle('bg-primary',isRecurring); track.classList.toggle('bg-outline-variant',!isRecurring);
-  thumb.style.cssText=isRecurring?'top:.25rem;left:.25rem;right:auto':'top:.25rem;right:.25rem;left:auto';
-  document.getElementById('recurring-options').classList.toggle('hidden',!isRecurring);
-}
-
-function toggleInstallments(){
-  isInstall=!isInstall;
-  const track=document.getElementById('install-toggle'), thumb=document.getElementById('install-thumb');
-  track.classList.toggle('bg-primary',isInstall); track.classList.toggle('bg-outline-variant',!isInstall);
-  thumb.style.cssText=isInstall?'top:.25rem;left:.25rem;right:auto':'top:.25rem;right:.25rem;left:auto';
-  document.getElementById('install-fields').classList.toggle('hidden',!isInstall);
-  if(!isInstall) document.getElementById('installment-preview').classList.add('hidden');
-  else updateInstallmentPreview();
+  const grid=document.getElementById('tx-mode-grid');
+  const installBtn=document.getElementById('mode-btn-installments');
+  if(type==='expense'){
+    installBtn.classList.remove('hidden');
+    grid.className='grid grid-cols-2 gap-3';
+  } else {
+    installBtn.classList.add('hidden');
+    grid.className='grid grid-cols-1 gap-3';
+    if(txModeState==='installments'){
+      txModeState=null; isInstall=false;
+      _resetModeCards();
+      document.getElementById('install-fields').classList.add('hidden');
+      document.getElementById('installment-preview').classList.add('hidden');
+    }
+  }
 }
 
 function updateInstallmentPreview(){
@@ -1397,9 +1560,14 @@ function renderLoans(){
 // BUCKETS
 // ══════════════════════════════════════════
 function openBucketModal(){
-  document.getElementById('bucket-name').value=''; document.getElementById('bucket-target').value=''; document.getElementById('bucket-current').value='0';
+  document.getElementById('bucket-name').value='';
+  document.getElementById('bucket-deposit').value='0';
+  document.getElementById('bucket-target').value='';
+  document.getElementById('bucket-fund-name').value='';
+  document.getElementById('bucket-fund-number').value='';
+  document.getElementById('bucket-date').value=new Date().toISOString().split('T')[0];
   selectedIcon='account_balance_wallet';
-  document.querySelectorAll('.icon-btn').forEach(b=>b.classList.toggle('ring-2 ring-primary',false));
+  document.querySelectorAll('.icon-btn').forEach(b=>{ b.classList.remove('ring-2'); b.classList.remove('ring-primary'); });
   document.querySelector('.icon-btn')?.classList.add('ring-2','ring-primary');
   document.getElementById('bucket-modal').classList.remove('hidden');
   setTimeout(()=>document.getElementById('bucket-sheet').classList.add('open'),10);
@@ -1413,20 +1581,49 @@ function selectIcon(btn,icon){
   document.querySelectorAll('.icon-btn').forEach(b=>{b.classList.remove('ring-2','ring-primary')});
   btn.classList.add('ring-2','ring-primary');
 }
+let currentBucketId = null;
+let bucketOpMode = 'deposit'; // 'deposit' | 'withdrawal'
+function selectBucketOp(op){
+  bucketOpMode=op;
+  const depBtn=document.getElementById('bucket-op-deposit');
+  const witBtn=document.getElementById('bucket-op-withdrawal');
+  if(op==='deposit'){
+    depBtn.classList.add('border-primary','bg-primary/5'); depBtn.classList.remove('border-outline-variant/30','bg-surface-container-low');
+    depBtn.querySelector('span.material-symbols-outlined').classList.replace('text-on-surface-variant','text-primary');
+    depBtn.querySelector('span.font-heebo').classList.replace('text-on-surface-variant','text-primary');
+    witBtn.classList.add('border-outline-variant/30','bg-surface-container-low'); witBtn.classList.remove('border-error','bg-error/5');
+    witBtn.querySelector('span.material-symbols-outlined').classList.replace('text-error','text-on-surface-variant');
+    witBtn.querySelector('span.font-heebo').classList.replace('text-error','text-on-surface-variant');
+  } else {
+    witBtn.classList.add('border-error','bg-error/5'); witBtn.classList.remove('border-outline-variant/30','bg-surface-container-low');
+    witBtn.querySelector('span.material-symbols-outlined').classList.replace('text-on-surface-variant','text-error');
+    witBtn.querySelector('span.font-heebo').classList.replace('text-on-surface-variant','text-error');
+    depBtn.classList.add('border-outline-variant/30','bg-surface-container-low'); depBtn.classList.remove('border-primary','bg-primary/5');
+    depBtn.querySelector('span.material-symbols-outlined').classList.replace('text-primary','text-on-surface-variant');
+    depBtn.querySelector('span.font-heebo').classList.replace('text-primary','text-on-surface-variant');
+  }
+}
 function saveBucket(){
   const name=document.getElementById('bucket-name').value.trim();
+  const deposit=parseFloat(document.getElementById('bucket-deposit').value)||0;
   const target=parseFloat(document.getElementById('bucket-target').value);
-  const current=parseFloat(document.getElementById('bucket-current').value)||0;
+  const fundName=document.getElementById('bucket-fund-name').value.trim();
+  const fundNumber=document.getElementById('bucket-fund-number').value.trim();
+  const date=document.getElementById('bucket-date').value;
   if(!name){ showToast('הזן שם','error'); return; }
-  if(!target||target<=0){ showToast('הזן יעד','error'); return; }
   const buckets=getBuckets();
-  buckets.push({ id:Date.now().toString(36)+Math.random().toString(36).substr(2,5), name, currentAmount:current, targetAmount:target, icon:selectedIcon });
+  const initTxs = deposit>0 ? [{ id:Date.now().toString(36), type:'deposit', amount:deposit, date:date||new Date().toISOString().slice(0,10), note:'הפקדה ראשונית' }] : [];
+  buckets.push({ id:Date.now().toString(36)+Math.random().toString(36).substr(2,5), name, currentAmount:deposit, targetAmount:target, icon:selectedIcon, fundName, fundNumber, date, bucketTxs:initTxs });
   saveBuckets(buckets);
   closeBucketModal(); renderBuckets(); showToast('קופה נוצרה! ✓','success');
 }
 function openEditBucket(id){
+  currentBucketId=id;
+  const b=getBuckets().find(x=>x.id===id);
   document.getElementById('edit-bucket-id').value=id;
   document.getElementById('edit-bucket-amount').value='';
+  if(b) document.getElementById('edit-bucket-title').textContent=b.name;
+  bucketOpMode='deposit'; selectBucketOp('deposit');
   document.getElementById('edit-bucket-modal').classList.remove('hidden');
   setTimeout(()=>document.getElementById('edit-bucket-sheet').classList.add('open'),10);
 }
@@ -1437,14 +1634,83 @@ function closeEditBucket(){
 function updateBucket(){
   const id=document.getElementById('edit-bucket-id').value;
   const amt=parseFloat(document.getElementById('edit-bucket-amount').value);
-  if(isNaN(amt)||amt===0){ showToast('הזן סכום','error'); return; }
+  if(isNaN(amt)||amt<=0){ showToast('הזן סכום','error'); return; }
   const buckets=getBuckets(), b=buckets.find(x=>x.id===id);
   if(!b) return;
   const was=b.currentAmount;
-  b.currentAmount=Math.max(0,b.currentAmount+amt);
+  const delta=bucketOpMode==='deposit'?amt:-amt;
+  b.currentAmount=Math.max(0,b.currentAmount+delta);
+  if(!b.bucketTxs) b.bucketTxs=[];
+  b.bucketTxs.push({ id:Date.now().toString(36), type:bucketOpMode, amount:amt, date:new Date().toISOString().slice(0,10), note:'' });
   saveBuckets(buckets);
   if(was<b.targetAmount && b.currentAmount>=b.targetAmount) triggerConfetti();
   closeEditBucket(); renderBuckets(); showToast('עודכן! ✓','success');
+}
+function openBucketHistory(){
+  const id=currentBucketId;
+  if(!id) return;
+  renderBucketHistory(id);
+  document.getElementById('bucket-history-modal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('bucket-history-sheet').classList.add('open'),10);
+}
+function closeBucketHistory(){
+  document.getElementById('bucket-history-sheet').classList.remove('open');
+  setTimeout(()=>document.getElementById('bucket-history-modal').classList.add('hidden'),300);
+}
+function renderBucketHistory(id){
+  const b=getBuckets().find(x=>x.id===id);
+  if(!b) return;
+  document.getElementById('bucket-history-title').textContent=b.name;
+  const pct=b.targetAmount>0?Math.min(100,Math.round(b.currentAmount/b.targetAmount*100)):0;
+  document.getElementById('bh-current').textContent=fmt(b.currentAmount);
+  document.getElementById('bh-target').textContent=b.targetAmount>0?fmt(b.targetAmount):'—';
+  document.getElementById('bh-pct').textContent=b.targetAmount>0?pct+'%':'—';
+  const txs=b.bucketTxs||[];
+  renderBucketChart(txs,b);
+  const listEl=document.getElementById('bucket-tx-history');
+  if(!txs.length){ listEl.innerHTML='<p class="text-center text-sm text-on-surface-variant font-heebo py-4">אין פעולות עדיין</p>'; return; }
+  listEl.innerHTML=[...txs].reverse().map(tx=>`
+    <div class="flex items-center justify-between bg-surface-container-high rounded-xl px-4 py-3">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center ${tx.type==='deposit'?'bg-green-100 text-green-700':'bg-red-100 text-red-600'}">
+          <span class="material-symbols-outlined text-base">${tx.type==='deposit'?'add':'remove'}</span>
+        </div>
+        <div>
+          <p class="font-heebo font-bold text-sm text-primary">${tx.type==='deposit'?'הפקדה':'משיכה'}</p>
+          <p class="text-xs text-on-surface-variant">${tx.date}${tx.note?' · '+tx.note:''}</p>
+        </div>
+      </div>
+      <span class="font-bold font-heebo ${tx.type==='deposit'?'text-green-700':'text-red-600'}">${tx.type==='deposit'?'+':'-'}${fmt(tx.amount)}</span>
+    </div>`).join('');
+}
+function renderBucketChart(txs,b){
+  const svg=document.getElementById('bucket-chart-svg');
+  const emptyEl=document.getElementById('bucket-chart-empty');
+  if(!txs||!txs.length){ svg.style.display='none'; emptyEl.classList.remove('hidden'); return; }
+  svg.style.display=''; emptyEl.classList.add('hidden');
+  const W=300,H=130,PAD=10;
+  // Build cumulative balance points
+  const points=[{date:txs[0].date,val:0}];
+  let running=0;
+  txs.forEach(tx=>{ running+=tx.type==='deposit'?tx.amount:-tx.amount; points.push({date:tx.date,val:Math.max(0,running)}); });
+  const vals=points.map(p=>p.val);
+  const minV=Math.min(...vals), maxV=Math.max(...vals);
+  const range=maxV-minV||1;
+  const toX=(i)=>PAD+(i/(points.length-1||1))*(W-2*PAD);
+  const toY=(v)=>PAD+(1-(v-minV)/range)*(H-2*PAD);
+  const coords=points.map((p,i)=>`${toX(i)},${toY(p.val)}`).join(' ');
+  const firstX=toX(0),lastX=toX(points.length-1);
+  svg.innerHTML=`
+    <defs>
+      <linearGradient id="bcg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#16a34a" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#16a34a" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polygon points="${coords} ${lastX},${H} ${firstX},${H}" fill="url(#bcg)"/>
+    <polyline points="${coords}" fill="none" stroke="#16a34a" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${points.map((p,i)=>`<circle cx="${toX(i)}" cy="${toY(p.val)}" r="3" fill="#16a34a"/>`).join('')}
+  `;
 }
 function deleteBucket(){
   const id=document.getElementById('edit-bucket-id').value;
@@ -1583,8 +1849,10 @@ function triggerConfetti(){
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-function init(){
+async function init(){
   try{
+    document.getElementById('loading-bar').style.width='50%';
+    await loadFromSupabase();
     document.getElementById('loading-bar').style.width='100%';
     setTimeout(()=>{
       document.getElementById('loading-overlay').classList.add('fade-out');
@@ -1593,7 +1861,7 @@ function init(){
       const hash=window.location.hash.replace('#','')||'dashboard';
       navigateTo(hash);
       setRange(currentRange);
-    },1000);
+    },400);
   } catch(err){
     console.error(err);
     document.getElementById('error-boundary').classList.remove('hidden');
