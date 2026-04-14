@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="he"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&amp;family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-high": "#e7e8e9",
+              "secondary-fixed-dim": "#bcc7dd",
+              "primary-container": "#1a2b47",
+              "on-primary-container": "#8293b4",
+              "tertiary": "#001b15",
+              "on-error": "#ffffff",
+              "background": "#f8f9fa",
+              "on-primary-fixed": "#081b37",
+              "inverse-surface": "#2e3132",
+              "primary": "#031631",
+              "on-secondary-fixed-variant": "#3c475a",
+              "tertiary-fixed-dim": "#a6cfc3",
+              "secondary-container": "#d5e0f7",
+              "surface-bright": "#f8f9fa",
+              "primary-fixed": "#d6e3ff",
+              "secondary-fixed": "#d8e3fa",
+              "on-tertiary-fixed": "#00201a",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#c1ebdf",
+              "on-surface": "#191c1d",
+              "on-surface-variant": "#44474d",
+              "tertiary-container": "#063129",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#b6c7ea",
+              "inverse-primary": "#b6c7ea",
+              "surface-container": "#edeeef",
+              "on-primary-fixed-variant": "#374765",
+              "surface": "#f8f9fa",
+              "on-secondary-container": "#586377",
+              "error": "#ba1a1a",
+              "surface-container-low": "#f3f4f5",
+              "secondary": "#545f72",
+              "outline-variant": "#c5c6ce",
+              "outline": "#75777e",
+              "on-tertiary-fixed-variant": "#274e45",
+              "surface-tint": "#4e5f7d",
+              "inverse-on-surface": "#f0f1f2",
+              "on-tertiary": "#ffffff",
+              "surface-variant": "#e1e3e4",
+              "surface-container-lowest": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-container-highest": "#e1e3e4",
+              "on-secondary-fixed": "#111c2c",
+              "surface-dim": "#d9dadb",
+              "on-secondary": "#ffffff",
+              "on-tertiary-container": "#729a8f",
+              "on-background": "#191c1d"
+            },
+            fontFamily: {
+              "heebo": ["Heebo", "sans-serif"],
+              "headline": ["Manrope", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .signature-gradient {
+            background: linear-gradient(135deg, #031631 0%, #1a2b47 100%);
+        }
+        .soft-blue-glow {
+            box-shadow: 0 0 40px -10px rgba(78, 95, 125, 0.15);
+        }
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="text-on-surface overflow-x-hidden">
+<!-- SideNavBar Shell -->
+<aside class="fixed top-0 right-0 h-full w-64 z-40 bg-slate-50 border-l border-slate-200/15 flex flex-col p-6 font-heebo text-right tracking-tight shadow-[-12px_0_32px_-4px_rgba(3,22,49,0.08)]">
+<div class="text-xl font-bold text-[#031631] mb-8">
+            חשבון השפעה של חגי
+            <div class="text-xs font-normal text-on-surface-variant opacity-60">The Digital Private Banker</div>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Active: בית -->
+<a class="flex items-center gap-3 p-3 text-[#031631] font-bold bg-white/80 backdrop-blur-md rounded-xl shadow-sm transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span>בית</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:text-[#1A2B47] hover:bg-slate-100 transition-all duration-300 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span>תזרים</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:text-[#1A2B47] hover:bg-slate-100 transition-all duration-300 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>קופות</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:text-[#1A2B47] hover:bg-slate-100 transition-all duration-300 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>הגדרות</span>
+</a>
+</nav>
+<button class="mt-auto signature-gradient text-white py-4 px-6 rounded-xl font-bold text-center shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+            הוספת תנועה
+        </button>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 left-0 right-64 h-16 z-30 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 w-full mr-64">
+<div class="text-lg font-medium text-[#1A2B47]">חשבון השפעה שלך</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-100/50 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<div class="flex items-center gap-3 pl-2 border-r border-outline-variant/20 mr-2">
+<span class="text-sm font-medium">חגי מזרחי</span>
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="account_circle" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="mr-64 pt-24 pb-12 px-12 min-h-screen">
+<!-- Header Section -->
+<section class="mb-10">
+<h1 class="text-4xl font-extrabold text-primary tracking-tight mb-2">שלום, חגי</h1>
+<p class="text-on-surface-variant max-w-2xl leading-relaxed">הנה תמונת המצב הפיננסית המזוקקת שלך להיום. הכל בשליטה.</p>
+</section>
+<!-- Status Cards Bento Row -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+<!-- Secondary Balance Card -->
+<div class="lg:col-span-4 bg-surface-container-low p-8 rounded-xl flex flex-col justify-between group hover:bg-surface-container transition-colors duration-500">
+<div>
+<span class="text-sm font-medium text-on-secondary-container tracking-wider uppercase opacity-70">יתרת בנק</span>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-4xl font-bold text-primary">₪15,240</span>
+<span class="text-tertiary-fixed-dim text-sm font-bold flex items-center">
+<span class="material-symbols-outlined text-sm">arrow_upward</span>
+                            2.4%
+                        </span>
+</div>
+</div>
+<div class="mt-8">
+<div class="flex justify-between items-end">
+<span class="text-xs text-on-surface-variant">מעודכן לפני 4 דקות</span>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors" data-icon="account_balance">account_balance</span>
+</div>
+</div>
+</div>
+<!-- Real Available Balance (Hero Card) -->
+<div class="lg:col-span-8 bg-surface-container-lowest p-8 rounded-xl soft-blue-glow relative overflow-hidden flex items-center border border-outline-variant/10">
+<div class="absolute top-0 left-0 w-1/3 h-full opacity-10 pointer-events-none">
+<img class="w-full h-full object-cover" data-alt="abstract flowing blue silk textures with soft focus and high-end aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyfICaQ__3Ndw8dVPLj3d4mb0mH0fazde6Qr3AzlDUfjTLLncZp-UsiOfUYzWEyusG_uQk0vFroSwPZRVutyugWKztKXYjlomIOpld8r1NDF-Of181u5O4rLUM7e5v2OSWBGQoQb-Ws6sb3iLOqbzxYBRrHHRU2kkA8F21BdSpsSzQ3wMZ2jz3OtBsJIl1gywz19Xt_wGK23CU1Sz5sgrPSl9NH_rdq3qxV1T5jrCywmxowSnLaJvlxZerBfIJbYmicd2iiy3NuQM"/>
+</div>
+<div class="relative z-10 w-full flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="text-right">
+<span class="text-sm font-bold text-surface-tint tracking-widest uppercase">יתרה ריאלית פנויה</span>
+<div class="mt-4">
+<span class="text-6xl font-black text-primary tracking-tighter">₪6,892</span>
+</div>
+<p class="mt-3 text-on-surface-variant text-sm max-w-xs">סכום זה מחושב לאחר ניכוי התחייבויות עתידיות והוצאות קבועות החודש.</p>
+</div>
+<div class="flex-shrink-0">
+<div class="w-32 h-32 rounded-full border-4 border-primary-fixed flex items-center justify-center relative">
+<svg class="absolute inset-0 w-full h-full -rotate-90">
+<circle class="text-outline-variant/10" cx="64" cy="64" fill="transparent" r="60" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="64" cy="64" fill="transparent" r="60" stroke="currentColor" stroke-dasharray="376.99" stroke-dashoffset="113" stroke-width="8"></circle>
+</svg>
+<span class="text-xl font-bold text-primary">70%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Cashflow Forecast Section -->
+<section class="bg-white rounded-xl p-10 shadow-sm border border-outline-variant/5">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+<div>
+<h2 class="text-2xl font-bold text-primary tracking-tight">חיזוי תזרים מזומנים</h2>
+<p class="text-on-surface-variant text-sm mt-1">צפי הכנסות והוצאות על בסיס התנהגות עבר והתחייבויות</p>
+</div>
+<div class="bg-surface-container-low p-1 rounded-full flex gap-1">
+<button class="px-6 py-2 rounded-full text-xs font-bold transition-all bg-white shadow-sm text-primary">חודש</button>
+<button class="px-6 py-2 rounded-full text-xs font-medium transition-all text-on-surface-variant hover:text-primary">3 חודשים</button>
+<button class="px-6 py-2 rounded-full text-xs font-medium transition-all text-on-surface-variant hover:text-primary">שנה</button>
+</div>
+</div>
+<!-- Column Chart Simulation -->
+<div class="relative h-80 w-full flex items-end justify-between gap-4 px-4">
+<!-- Data Columns -->
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full max-w-[40px] bg-outline-variant/20 rounded-t-lg h-3/4 relative overflow-hidden transition-all duration-300 group-hover:bg-outline-variant/30">
+<div class="absolute bottom-0 w-full bg-primary h-2/3 opacity-80 rounded-t-lg"></div>
+</div>
+<span class="mt-4 text-xs font-medium text-on-surface-variant">ינואר</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full max-w-[40px] bg-outline-variant/20 rounded-t-lg h-full relative overflow-hidden transition-all duration-300 group-hover:bg-outline-variant/30">
+<div class="absolute bottom-0 w-full bg-primary h-4/5 opacity-80 rounded-t-lg"></div>
+</div>
+<span class="mt-4 text-xs font-medium text-on-surface-variant">פברואר</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full max-w-[40px] bg-outline-variant/20 rounded-t-lg h-2/3 relative overflow-hidden transition-all duration-300 group-hover:bg-outline-variant/30">
+<div class="absolute bottom-0 w-full bg-primary h-1/2 opacity-80 rounded-t-lg"></div>
+</div>
+<span class="mt-4 text-xs font-medium text-on-surface-variant">מרץ</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full max-w-[40px] bg-outline-variant/20 rounded-t-lg h-5/6 relative overflow-hidden transition-all duration-300 group-hover:bg-outline-variant/30">
+<div class="absolute bottom-0 w-full bg-primary h-3/4 opacity-80 rounded-t-lg"></div>
+</div>
+<span class="mt-4 text-xs font-medium text-on-surface-variant">אפריל</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full max-w-[40px] bg-primary rounded-t-lg h-[90%] relative shadow-lg">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-primary text-white px-2 py-1 rounded text-[10px] font-bold">₪18,400</div>
+</div>
+<span class="mt-4 text-xs font-bold text-primary">מאי (נוכחי)</span>
+</div>
+<div class="flex-1 flex flex-col items-center group opacity-40">
+<div class="w-full max-w-[40px] border-2 border-dashed border-outline-variant rounded-t-lg h-3/4"></div>
+<span class="mt-4 text-xs font-medium text-on-surface-variant">יוני</span>
+</div>
+<div class="flex-1 flex flex-col items-center group opacity-40">
+<div class="w-full max-w-[40px] border-2 border-dashed border-outline-variant rounded-t-lg h-1/2"></div>
+<span class="mt-4 text-xs font-medium text-on-surface-variant">יולי</span>
+</div>
+<!-- Zero Axis -->
+<div class="absolute bottom-8 left-0 right-0 h-px bg-outline-variant/20"></div>
+</div>
+<!-- Legend -->
+<div class="mt-10 flex gap-8 justify-center border-t border-outline-variant/10 pt-8">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-sm bg-primary opacity-80"></div>
+<span class="text-xs font-medium text-on-surface-variant">תזרים נטו</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-sm bg-outline-variant/20"></div>
+<span class="text-xs font-medium text-on-surface-variant">הוצאות צפויות</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 border-2 border-dashed border-outline-variant rounded-sm"></div>
+<span class="text-xs font-medium text-on-surface-variant">תחזית אלגוריתמית</span>
+</div>
+</div>
+</section>
+<!-- Insights Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+<div class="bg-surface-container-low p-6 rounded-xl flex items-start gap-4 border border-outline-variant/5">
+<div class="bg-tertiary-container/10 p-3 rounded-full text-on-tertiary-container">
+<span class="material-symbols-outlined" data-icon="lightbulb">lightbulb</span>
+</div>
+<div>
+<h3 class="font-bold text-primary">תובנת שפע</h3>
+<p class="text-sm text-on-surface-variant mt-1 leading-relaxed">זיהינו יתרה פנויה גבוהה מהרגיל החודש. שקול להעביר ₪2,500 לחיסכון המניב שלך כדי להגדיל את התזרים הפסיבי.</p>
+</div>
+</div>
+<div class="bg-error-container/10 p-6 rounded-xl flex items-start gap-4 border border-error-container/20">
+<div class="bg-error-container p-3 rounded-full text-on-error-container">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+</div>
+<div>
+<h3 class="font-bold text-on-error-container">שים לב לתזרים</h3>
+<p class="text-sm text-on-error-container opacity-80 mt-1 leading-relaxed">צפויה תנועה חריגה של ₪1,200 ב-15 לחודש (ביטוח שנתי). וודא כי היתרה בחשבון העו"ש מספיקה.</p>
+</div>
+</div>
+</div>
+</main>
+</body></html>

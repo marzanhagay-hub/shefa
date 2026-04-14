@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find '/c/Users/marza/OneDrive/Desktop/projects claude/shefa' -type f -name *.ts -o -name *.tsx -o -name *.js -o -name *.json -o -name *.html)",
+      "Bash(npx --version)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}

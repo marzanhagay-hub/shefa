@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta name="theme-color" content="#031631"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>שפע - ניהול פיננסי אישי</title>
+<link rel="manifest" href="manifest.json"/>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=Inter:wght@400;500;600&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        "on-surface-variant":"#44474d","outline":"#75777e","primary-fixed":"#d6e3ff",
+        "primary-container":"#1a2b47","secondary-container":"#d5e0f7","primary-fixed-dim":"#b6c7ea",
+        "tertiary-fixed":"#c1ebdf","surface-container-high":"#e7e8e9","on-tertiary-container":"#729a8f",
+        "primary":"#031631","outline-variant":"#c5c6ce","on-primary":"#ffffff",
+        "error-container":"#ffdad6","on-surface":"#191c1d","surface-container-lowest":"#ffffff",
+        "on-tertiary-fixed-variant":"#274e45","on-error-container":"#93000a",
+        "error":"#ba1a1a","on-secondary":"#ffffff","secondary":"#545f72",
+        "tertiary":"#001b15","on-primary-container":"#8293b4","background":"#f8f9fa",
+        "inverse-primary":"#b6c7ea","surface-container":"#edeeef","surface-tint":"#4e5f7d",
+        "surface":"#f8f9fa","on-background":"#191c1d","on-secondary-container":"#586377",
+        "tertiary-container":"#063129","surface-container-highest":"#e1e3e4",
+        "surface-bright":"#f8f9fa","tertiary-fixed-dim":"#a6cfc3","on-primary-fixed":"#081b37",
+        "surface-container-low":"#f3f4f5","inverse-surface":"#2e3132","secondary-fixed":"#d8e3fa",
+        "on-tertiary-fixed":"#00201a",
+        "income":"#16a34a","income-bg":"#dcfce7","income-text":"#14532d",
+        "expense-red":"#dc2626","expense-bg":"#fee2e2","expense-text":"#7f1d1d",
+      },
+      fontFamily:{"heebo":["Heebo","sans-serif"],"body":["Inter","Heebo","sans-serif"]},
+      borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","2xl":"1rem","3xl":"1.5rem","full":"9999px"},
+    },
+  },
+}
+</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;text-transform:none;letter-spacing:normal;word-wrap:normal;white-space:nowrap;direction:ltr}
+.glass-card{background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.signature-gradient{background:linear-gradient(135deg,#031631 0%,#1a2b47 100%)}
+.success-glow{box-shadow:0 0 20px rgba(166,207,195,.4)}
+.glow-primary{box-shadow:0 0 40px -10px rgba(3,22,49,.25)}
+body{font-family:'Heebo','Inter',sans-serif;background-color:#f8f9fa;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#c5c6ce;border-radius:4px}
+.page{display:none}.page.active{display:block}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.skeleton{background:linear-gradient(90deg,#e7e8e9 25%,#f3f4f5 50%,#e7e8e9 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:.75rem}
+.modal-backdrop{background:rgba(3,22,49,.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.toast{transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1;pointer-events:auto}
+@keyframes confetti-fall{0%{transform:translateY(-100vh) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.confetti-piece{position:fixed;top:-10px;z-index:9999;width:10px;height:10px;border-radius:2px;animation:confetti-fall 3s ease-in forwards}
+#loading-overlay{transition:opacity .4s ease}
+#loading-overlay.fade-out{opacity:0;pointer-events:none}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+.btn-type{transition:all .2s ease}
+.btn-income.active{background:#dcfce7;color:#14532d;font-weight:700;box-shadow:0 1px 4px rgba(22,163,74,.2)}
+.btn-expense.active{background:#fee2e2;color:#7f1d1d;font-weight:700;box-shadow:0 1px 4px rgba(220,38,38,.2)}
+.modal-sheet{transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.modal-sheet.open{transform:translateY(0)}
+/* Custom combobox */
+.combo-wrapper{position:relative}
+.combo-dropdown{position:absolute;top:100%;right:0;left:0;z-index:100;background:#fff;border:1px solid #c5c6ce;border-radius:.75rem;max-height:200px;overflow-y:auto;box-shadow:0 8px 24px -4px rgba(3,22,49,.12)}
+.combo-option{padding:.625rem 1rem;cursor:pointer;font-family:'Heebo',sans-serif;font-size:.875rem;transition:background .1s}
+.combo-option:hover{background:#f3f4f5}
+/* SVG chart styles */
+.chart-tooltip{pointer-events:none;transition:opacity .15s}
+/* Pie chart */
+.pie-slice{transition:transform .2s,opacity .2s;cursor:pointer;transform-origin:center}
+.pie-slice:hover{opacity:.85}
+/* Range tabs */
+.range-tab{transition:all .15s}
+.range-tab.active{background:#031631;color:#fff}
+/* Loan badge */
+.leverage-badge{background:#fef9c3;color:#713f12}
+</style>
+</head>
+<body class="bg-background text-on-background antialiased">
+
+<!-- LOADING OVERLAY -->
+<div id="loading-overlay" class="fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center gap-4">
+  <div class="w-16 h-16 signature-gradient rounded-2xl flex items-center justify-center shadow-xl">
+    <span class="material-symbols-outlined text-white text-3xl" style="font-variation-settings:'FILL' 1">shield_with_heart</span>
+  </div>
+  <p class="font-heebo font-bold text-primary text-lg">מחשב את השפע שלך...</p>
+  <div class="w-48 h-1 bg-surface-container-high rounded-full overflow-hidden">
+    <div id="loading-bar" class="h-full signature-gradient rounded-full" style="width:0%;transition:width 1s ease"></div>
+  </div>
+</div>
+
+<!-- ERROR BOUNDARY -->
+<div id="error-boundary" class="fixed inset-0 z-[100] bg-error-container hidden items-center justify-center flex-col gap-6 p-8 text-center">
+  <span class="material-symbols-outlined text-on-error-container text-6xl">error</span>
+  <h2 class="font-heebo font-bold text-2xl text-on-error-container">אופס, משהו השתבש</h2>
+  <div class="flex gap-4">
+    <button onclick="location.reload()" class="px-6 py-3 bg-on-error-container text-error-container rounded-xl font-bold">נסה שוב</button>
+    <button onclick="if(confirm('כל הנתונים יימחקו')){localStorage.clear();location.reload()}" class="px-6 py-3 border-2 border-on-error-container text-on-error-container rounded-xl font-bold">איפוס מלא</button>
+  </div>
+</div>
+
+<!-- TOP APP BAR -->
+<header class="bg-slate-50/80 backdrop-blur-xl border-b border-slate-200/15 shadow-sm fixed top-0 w-full z-50">
+  <div class="flex flex-row-reverse justify-between items-center w-full px-6 py-4">
+    <div class="w-10 h-10 rounded-full signature-gradient flex items-center justify-center">
+      <span class="material-symbols-outlined text-white text-sm" style="font-variation-settings:'FILL' 1">shield_with_heart</span>
+    </div>
+    <h1 id="page-title" class="font-heebo font-bold text-lg tracking-tight text-right text-slate-900">חשבון השפע שלך</h1>
+    <div class="w-10"></div>
+  </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="pt-20 pb-36 px-4 max-w-5xl mx-auto">
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div id="page-dashboard" class="page active space-y-6">
+    <section class="space-y-1 pt-2">
+      <p class="text-on-surface-variant font-body text-sm">שלום, בוקר טוב</p>
+      <h2 class="text-3xl font-black font-heebo text-primary tracking-tight">סקירת העושר שלך</h2>
+    </section>
+
+    <!-- Balance cards -->
+    <section id="dash-cards" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-surface-container-low rounded-3xl p-6 flex flex-col justify-between group transition-all hover:bg-surface-container">
+        <div class="flex justify-between items-start mb-4">
+          <div class="p-3 bg-surface-container-lowest rounded-2xl">
+            <span class="material-symbols-outlined text-primary text-2xl">account_balance</span>
+          </div>
+          <span class="text-xs font-bold font-heebo text-outline uppercase tracking-widest">יתרת בנק</span>
+        </div>
+        <div>
+          <p class="text-on-surface-variant font-heebo font-medium mb-1 text-sm">יתרה בבנק</p>
+          <span id="bank-balance-display" class="text-4xl font-black font-heebo text-primary">₪0</span>
+        </div>
+      </div>
+      <div class="bg-primary rounded-3xl p-6 flex flex-col justify-between text-on-primary glow-primary relative overflow-hidden hover:scale-[1.02] transition-all">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+        <div class="flex justify-between items-start mb-4 relative z-10">
+          <div class="p-3 bg-white/10 rounded-2xl">
+            <span class="material-symbols-outlined text-on-primary text-2xl" style="font-variation-settings:'FILL' 1">shield_with_heart</span>
+          </div>
+          <div class="flex items-center gap-1 px-3 py-1 bg-white/10 rounded-full">
+            <span class="w-2 h-2 bg-tertiary-fixed-dim rounded-full animate-pulse"></span>
+            <span class="text-[10px] font-bold font-heebo text-tertiary-fixed">שקט נפשי</span>
+          </div>
+        </div>
+        <div class="relative z-10">
+          <p class="text-on-primary-container font-heebo font-medium mb-1 text-sm">יתרה ריאלית פנויה</p>
+          <span id="real-balance-display" class="text-5xl font-black font-heebo">₪0</span>
+          <p class="text-xs text-on-primary-container mt-2 opacity-80">לאחר ניכוי התחייבויות</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Empty state -->
+    <section id="dash-empty" class="hidden bg-surface-container-lowest rounded-3xl p-12 text-center space-y-4">
+      <div class="w-20 h-20 mx-auto bg-surface-container-high rounded-full flex items-center justify-center">
+        <span class="material-symbols-outlined text-4xl text-outline">help_outline</span>
+      </div>
+      <h3 class="font-heebo font-bold text-xl text-primary">ברוך הבא לשפע!</h3>
+      <p class="text-on-surface-variant max-w-sm mx-auto text-sm">הגדר את יתרת הבנק שלך והוסף תנועות ראשונות כדי לראות את התמונה הפיננסית שלך.</p>
+      <button onclick="navigateTo('settings')" class="signature-gradient text-white font-heebo font-bold px-8 py-3 rounded-2xl shadow-lg active:scale-95 transition-transform inline-block">
+        הגדר יתרה ראשונה
+      </button>
+    </section>
+
+    <!-- Line Chart -->
+    <section id="dash-chart-section" class="bg-surface-container-lowest rounded-3xl p-6 space-y-4">
+      <div class="flex flex-col md:flex-row-reverse justify-between items-start gap-3">
+        <div>
+          <h3 class="text-xl font-bold font-heebo text-primary">תזרים בזמן אמת</h3>
+          <p class="text-sm text-on-surface-variant">הכנסות מול הוצאות לאורך זמן</p>
+        </div>
+        <div id="range-tabs" class="flex bg-surface-container rounded-xl p-1 gap-1 flex-wrap">
+          <button onclick="setRange('7d')" class="range-tab px-3 py-1.5 text-xs font-bold font-heebo rounded-lg text-secondary" data-range="7d">7 ימים</button>
+          <button onclick="setRange('30d')" class="range-tab px-3 py-1.5 text-xs font-bold font-heebo rounded-lg text-secondary" data-range="30d">30 ימים</button>
+          <button onclick="setRange('3m')" class="range-tab active px-3 py-1.5 text-xs font-bold font-heebo rounded-lg" data-range="3m">3 חודשים</button>
+          <button onclick="setRange('1y')" class="range-tab px-3 py-1.5 text-xs font-bold font-heebo rounded-lg text-secondary" data-range="1y">שנה</button>
+          <button onclick="setRange('all')" class="range-tab px-3 py-1.5 text-xs font-bold font-heebo rounded-lg text-secondary" data-range="all">הכל</button>
+        </div>
+      </div>
+      <!-- Legend -->
+      <div class="flex gap-4 text-xs font-heebo font-bold">
+        <span class="flex items-center gap-1.5"><span class="w-6 h-2 rounded-full bg-income inline-block"></span>הכנסות</span>
+        <span class="flex items-center gap-1.5"><span class="w-6 h-2 rounded-full bg-expense-red inline-block"></span>הוצאות</span>
+      </div>
+      <div id="line-chart-container" class="w-full overflow-x-auto">
+        <svg id="line-chart-svg" viewBox="0 0 700 220" preserveAspectRatio="xMidYMid meet" class="w-full" style="min-height:180px"></svg>
+      </div>
+      <!-- Net balance indicator -->
+      <div class="flex items-center justify-between pt-2 border-t border-outline-variant/20">
+        <span class="text-sm font-heebo text-on-surface-variant">יתרה נטו בתקופה:</span>
+        <span id="net-balance-indicator" class="text-lg font-black font-heebo">₪0</span>
+      </div>
+    </section>
+
+    <!-- Analysis section -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Expense breakdown -->
+      <div class="bg-surface-container-lowest rounded-3xl p-6 space-y-4">
+        <h3 class="font-bold font-heebo text-primary">פילוח הוצאות</h3>
+        <div id="expense-pie-container" class="flex flex-col items-center gap-4">
+          <svg id="expense-pie" viewBox="0 0 200 200" class="w-40 h-40"></svg>
+          <div id="expense-legend" class="w-full space-y-2"></div>
+        </div>
+      </div>
+      <!-- Income breakdown -->
+      <div class="bg-surface-container-lowest rounded-3xl p-6 space-y-4">
+        <h3 class="font-bold font-heebo text-primary">פילוח הכנסות</h3>
+        <div id="income-pie-container" class="flex flex-col items-center gap-4">
+          <svg id="income-pie" viewBox="0 0 200 200" class="w-40 h-40"></svg>
+          <div id="income-legend" class="w-full space-y-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Insight & Profit row -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="md:col-span-2 bg-surface-container-high rounded-3xl p-5 flex items-center gap-4 border border-outline-variant/10">
+        <div class="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-white">lightbulb</span>
+        </div>
+        <div>
+          <h4 class="font-bold font-heebo text-primary">תובנה חכמה</h4>
+          <p id="insight-text" class="text-sm text-secondary font-body">הזן תנועות לקבלת תובנות</p>
+        </div>
+      </div>
+      <div class="bg-tertiary-fixed rounded-3xl p-5 flex flex-col justify-center">
+        <span class="text-[10px] font-black font-heebo text-on-tertiary-fixed-variant tracking-widest uppercase mb-1">קופת רווח</span>
+        <p id="profit-amount" class="text-xl font-black font-heebo text-on-tertiary-fixed">₪0</p>
+        <div class="mt-3 h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+          <div id="profit-bar" class="h-full bg-on-tertiary-fixed-variant rounded-full transition-all" style="width:0%"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ CASHFLOW ═══ -->
+  <div id="page-cashflow" class="page space-y-6">
+    <div class="pt-2">
+      <h2 class="text-4xl font-black leading-tight tracking-tight text-primary font-heebo">ניהול תזרים</h2>
+      <p class="text-secondary font-medium text-base">כל ההכנסות וההוצאות שלך</p>
+    </div>
+
+    <!-- Inner tab switcher -->
+    <div class="flex bg-surface-container rounded-2xl p-1 gap-1">
+      <button id="cf-tab-tx" onclick="setCashflowTab('transactions')" class="flex-1 py-2.5 px-4 rounded-xl text-sm font-bold font-heebo transition-all bg-primary text-on-primary">תנועות</button>
+      <button id="cf-tab-loans" onclick="setCashflowTab('loans')" class="flex-1 py-2.5 px-4 rounded-xl text-sm font-bold font-heebo transition-all text-secondary">הלוואות</button>
+    </div>
+
+    <!-- Transactions sub-section -->
+    <div id="cf-section-tx" class="space-y-4">
+      <div id="tx-success-banner" class="hidden p-4 bg-tertiary-fixed rounded-2xl flex items-center justify-between border border-on-tertiary-container/10">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 bg-on-tertiary-container rounded-full flex items-center justify-center">
+            <span class="material-symbols-outlined text-white text-sm" style="font-variation-settings:'FILL' 1">check_circle</span>
+          </div>
+          <div>
+            <p class="font-bold text-on-tertiary-fixed text-sm">נוסף בהצלחה</p>
+            <p id="tx-success-detail" class="text-xs text-on-tertiary-fixed-variant opacity-80"></p>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-2 overflow-x-auto pb-1">
+        <button onclick="filterTx('all')" class="filter-btn px-5 py-2 bg-primary text-on-primary rounded-xl font-bold text-sm whitespace-nowrap active:scale-95 transition-transform" data-filter="all">הכל</button>
+        <button onclick="filterTx('income')" class="filter-btn px-5 py-2 bg-surface-container-low text-secondary rounded-xl font-medium text-sm whitespace-nowrap active:scale-95 transition-transform" data-filter="income">הכנסות</button>
+        <button onclick="filterTx('expense')" class="filter-btn px-5 py-2 bg-surface-container-low text-secondary rounded-xl font-medium text-sm whitespace-nowrap active:scale-95 transition-transform" data-filter="expense">הוצאות</button>
+      </div>
+      <div id="tx-list" class="space-y-4"></div>
+      <div id="tx-empty" class="hidden text-center py-16 space-y-3">
+        <div class="w-20 h-20 mx-auto bg-surface-container-high rounded-full flex items-center justify-center">
+          <span class="material-symbols-outlined text-4xl text-outline">account_balance_wallet</span>
+        </div>
+        <h3 class="font-heebo font-bold text-xl text-primary">אין עדיין תנועות</h3>
+        <p class="text-on-surface-variant text-sm">לחץ + להוספת תנועה ראשונה</p>
+      </div>
+    </div>
+
+    <!-- Loans sub-section -->
+    <div id="cf-section-loans" class="hidden space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-surface-container-low rounded-3xl p-5">
+          <p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">סה"כ חוב</p>
+          <span id="loans-total" class="text-3xl font-black font-heebo text-primary">₪0</span>
+        </div>
+        <div class="bg-error-container rounded-3xl p-5">
+          <p class="text-xs font-bold text-on-error-container uppercase tracking-widest mb-2">תשלום חודשי</p>
+          <span id="loans-monthly" class="text-3xl font-black font-heebo text-on-error-container">₪0</span>
+        </div>
+      </div>
+      <div id="loans-list" class="space-y-4"></div>
+      <div id="loans-empty" class="hidden text-center py-16 space-y-3">
+        <div class="w-20 h-20 mx-auto bg-surface-container-high rounded-full flex items-center justify-center">
+          <span class="material-symbols-outlined text-4xl text-outline">credit_card</span>
+        </div>
+        <h3 class="font-heebo font-bold text-xl text-primary">אין הלוואות רשומות</h3>
+        <p class="text-on-surface-variant text-sm">לחץ + להוספת הלוואה</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BUCKETS ═══ -->
+  <div id="page-buckets" class="page space-y-6">
+    <div class="pt-2">
+      <h2 class="text-4xl font-black leading-tight tracking-tighter text-primary font-heebo">קופות השפע</h2>
+      <p class="text-on-surface-variant text-base">ניהול יעדים וחיסכון</p>
+    </div>
+    <div id="bucket-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </div>
+
+  <!-- ═══ SETTINGS ═══ -->
+  <div id="page-settings" class="page space-y-6">
+    <div class="pt-2">
+      <h2 class="text-4xl font-black leading-tight tracking-tighter text-primary font-heebo">הגדרות</h2>
+      <p class="text-on-surface-variant text-base">התאמה אישית</p>
+    </div>
+    <div class="space-y-4 max-w-lg">
+      <div class="glass-card rounded-3xl p-5 shadow-sm border border-white/20 space-y-3">
+        <h3 class="font-heebo font-bold text-base text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-xl">account_balance</span>יתרת בנק נוכחית
+        </h3>
+        <div class="flex gap-3">
+          <input id="settings-bank-balance" type="number" inputmode="decimal" placeholder="0.00" class="flex-1 bg-surface-container-high border-none rounded-xl py-3 px-4 focus:ring-1 focus:ring-surface-tint/20 font-heebo text-lg" dir="ltr"/>
+          <span class="flex items-center text-primary font-heebo font-bold text-lg">₪</span>
+        </div>
+        <button onclick="saveBankBalance()" class="w-full signature-gradient text-white font-heebo font-bold py-3 rounded-xl active:scale-95 transition-transform">עדכן יתרה</button>
+      </div>
+      <div class="glass-card rounded-3xl p-5 shadow-sm border border-white/20 space-y-3">
+        <h3 class="font-heebo font-bold text-base text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-xl">savings</span>אחוז הפרשה לרווח
+        </h3>
+        <div class="flex items-center gap-4">
+          <input id="settings-profit-rate" type="range" min="1" max="30" value="10" class="flex-1 accent-primary" oninput="document.getElementById('profit-rate-val').textContent=this.value+'%'"/>
+          <span id="profit-rate-val" class="text-2xl font-black font-heebo text-primary w-14 text-center">10%</span>
+        </div>
+        <button onclick="saveProfitRate()" class="w-full signature-gradient text-white font-heebo font-bold py-3 rounded-xl active:scale-95 transition-transform">שמור</button>
+      </div>
+      <div class="glass-card rounded-3xl p-5 shadow-sm border border-white/20 space-y-3">
+        <h3 class="font-heebo font-bold text-base text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-xl">lock</span>קוד PIN
+        </h3>
+        <input id="settings-pin" type="password" inputmode="numeric" maxlength="4" placeholder="4 ספרות" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-lg text-center tracking-[1em]" dir="ltr"/>
+        <button onclick="savePin()" class="w-full signature-gradient text-white font-heebo font-bold py-3 rounded-xl active:scale-95 transition-transform">שמור קוד</button>
+      </div>
+      <div class="glass-card rounded-3xl p-5 shadow-sm border border-white/20 space-y-3">
+        <h3 class="font-heebo font-bold text-base text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-xl">database</span>ניהול נתונים
+        </h3>
+        <button onclick="exportData()" class="w-full bg-surface-container-high text-primary font-heebo font-bold py-3 rounded-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-sm">download</span>ייצוא JSON
+        </button>
+        <label class="w-full bg-surface-container-high text-primary font-heebo font-bold py-3 rounded-xl active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+          <span class="material-symbols-outlined text-sm">upload</span>ייבוא JSON
+          <input type="file" accept=".json" class="hidden" onchange="importData(event)"/>
+        </label>
+        <button onclick="if(confirm('כל הנתונים יימחקו?')){localStorage.clear();location.reload()}" class="w-full border-2 border-error text-error font-heebo font-bold py-3 rounded-xl active:scale-95 transition-transform">מחיקת הכל</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- FAB -->
+<button id="fab-btn" onclick="openFab()" class="fixed bottom-28 start-4 w-14 h-14 signature-gradient text-on-primary rounded-2xl shadow-xl flex items-center justify-center z-[60] active:scale-90 transition-all hover:brightness-110">
+  <span class="material-symbols-outlined text-3xl">add</span>
+</button>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 left-0 w-full flex flex-row-reverse justify-around items-center px-2 pb-5 pt-2 bg-white/90 backdrop-blur-2xl z-50 rounded-t-3xl border-t border-slate-100 shadow-[0_-8px_24px_-4px_rgba(3,22,49,.08)]">
+  <a onclick="navigateTo('dashboard')" class="nav-item flex flex-col items-center justify-center px-3 py-2 rounded-xl cursor-pointer transition-all" data-page="dashboard">
+    <span class="material-symbols-outlined text-xl">home</span>
+    <span class="font-heebo text-[10px] font-medium mt-0.5">בית</span>
+  </a>
+  <a onclick="navigateTo('cashflow')" class="nav-item flex flex-col items-center justify-center px-3 py-2 rounded-xl cursor-pointer transition-all text-slate-400" data-page="cashflow">
+    <span class="material-symbols-outlined text-xl">account_balance_wallet</span>
+    <span class="font-heebo text-[10px] font-medium mt-0.5">תזרים</span>
+  </a>
+  <a onclick="navigateTo('buckets')" class="nav-item flex flex-col items-center justify-center px-3 py-2 rounded-xl cursor-pointer transition-all text-slate-400" data-page="buckets">
+    <span class="material-symbols-outlined text-xl">savings</span>
+    <span class="font-heebo text-[10px] font-medium mt-0.5">קופות</span>
+  </a>
+  <a onclick="navigateTo('settings')" class="nav-item flex flex-col items-center justify-center px-3 py-2 rounded-xl cursor-pointer transition-all text-slate-400" data-page="settings">
+    <span class="material-symbols-outlined text-xl">settings</span>
+    <span class="font-heebo text-[10px] font-medium mt-0.5">הגדרות</span>
+  </a>
+</nav>
+
+<!-- ═══ ADD TRANSACTION MODAL ═══ -->
+<div id="tx-modal" class="fixed inset-0 z-[70] hidden">
+  <div class="modal-backdrop absolute inset-0" onclick="closeTxModal()"></div>
+  <div id="tx-sheet" class="modal-sheet absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl max-h-[92vh] overflow-y-auto">
+    <div class="w-10 h-1 bg-outline-variant/40 rounded-full mx-auto mt-3 mb-2"></div>
+    <div class="px-5 pb-8 space-y-5">
+      <h2 class="text-xl font-black font-heebo text-primary text-center">הוספת תנועה</h2>
+
+      <!-- Type toggle -->
+      <div class="bg-surface-container-low p-1 rounded-2xl flex gap-1">
+        <button type="button" id="btn-income" onclick="setTxType('income')" class="btn-type btn-income active flex-1 py-3 px-4 rounded-xl text-sm font-heebo transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-base">arrow_downward</span>הכנסה
+        </button>
+        <button type="button" id="btn-expense" onclick="setTxType('expense')" class="btn-type btn-expense flex-1 py-3 px-4 rounded-xl text-sm font-heebo text-on-surface-variant transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-base">arrow_upward</span>הוצאה
+        </button>
+      </div>
+
+      <!-- Amount -->
+      <div class="text-center">
+        <input id="tx-amount" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00" class="text-primary font-heebo font-black text-5xl tracking-tight bg-transparent border-none text-center focus:ring-0 w-full" dir="ltr" oninput="updateInstallmentPreview()"/>
+        <span class="text-on-surface-variant text-sm font-heebo">₪</span>
+      </div>
+
+      <!-- Title -->
+      <div class="space-y-1">
+        <label class="text-xs font-bold font-heebo text-on-surface-variant">כותרת</label>
+        <input id="tx-title" type="text" placeholder="לדוגמה: קניות בסופר" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm focus:ring-1 focus:ring-surface-tint/20"/>
+      </div>
+
+      <!-- Category combobox -->
+      <div class="space-y-1">
+        <label class="text-xs font-bold font-heebo text-on-surface-variant">קטגוריה</label>
+        <div class="combo-wrapper">
+          <input id="tx-category-input" type="text" placeholder="בחר או הקלד קטגוריה חדשה" autocomplete="off"
+            class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm focus:ring-1 focus:ring-surface-tint/20"
+            oninput="filterCombo()" onfocus="showCombo()" onblur="setTimeout(hideCombo,200)"/>
+          <div id="combo-dropdown" class="combo-dropdown hidden"></div>
+        </div>
+      </div>
+
+      <!-- Date -->
+      <div class="space-y-1">
+        <label class="text-xs font-bold font-heebo text-on-surface-variant">תאריך</label>
+        <input id="tx-date" type="date" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm focus:ring-1 focus:ring-surface-tint/20"/>
+      </div>
+
+      <!-- Recurring toggle -->
+      <div class="flex items-center justify-between py-2">
+        <div>
+          <span class="text-sm font-heebo font-bold text-primary">הוראת קבע</span>
+          <span class="block text-xs text-on-surface-variant">חזור על פעולה זו</span>
+        </div>
+        <button type="button" id="recurring-toggle" onclick="toggleRecurring()" class="w-12 h-6 rounded-full bg-outline-variant relative transition-colors">
+          <div id="recurring-thumb" class="absolute top-1 right-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all"></div>
+        </button>
+      </div>
+
+      <!-- Recurring options -->
+      <div id="recurring-options" class="hidden space-y-3 p-4 bg-surface-container-low rounded-2xl">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-bold font-heebo text-on-surface-variant">תדירות</label>
+            <select id="tx-frequency" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm">
+              <option value="daily">יומי</option>
+              <option value="weekly">שבועי</option>
+              <option value="monthly" selected>חודשי</option>
+              <option value="yearly">שנתי</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-bold font-heebo text-on-surface-variant">תאריך סיום (רשות)</label>
+            <input id="tx-end-date" type="date" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Installments (expense only) -->
+      <div id="installments-section" class="hidden space-y-3 p-4 bg-surface-container-low rounded-2xl">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-heebo font-bold text-primary">תשלומים</span>
+          <button type="button" id="install-toggle" onclick="toggleInstallments()" class="w-12 h-6 rounded-full bg-outline-variant relative transition-colors">
+            <div id="install-thumb" class="absolute top-1 right-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all"></div>
+          </button>
+        </div>
+        <div id="install-fields" class="hidden grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-bold font-heebo text-on-surface-variant">מספר תשלומים</label>
+            <input id="tx-installments" type="number" inputmode="numeric" min="2" value="3" placeholder="3" class="w-full bg-surface-container-highest border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr" oninput="updateInstallmentPreview()"/>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-bold font-heebo text-on-surface-variant">ריבית שנתית %</label>
+            <input id="tx-interest" type="number" inputmode="decimal" min="0" max="100" value="0" placeholder="0" class="w-full bg-surface-container-highest border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr" oninput="updateInstallmentPreview()"/>
+          </div>
+          <div id="installment-preview" class="col-span-2 bg-surface-container-lowest rounded-xl p-3 text-sm font-heebo hidden">
+            <span class="text-on-surface-variant">תשלום חודשי: </span>
+            <span id="monthly-payment-preview" class="font-bold text-primary"></span>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="saveTx()" class="w-full signature-gradient text-white font-heebo font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform">
+        שמירת תנועה
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADD LOAN MODAL ═══ -->
+<div id="loan-modal" class="fixed inset-0 z-[70] hidden">
+  <div class="modal-backdrop absolute inset-0" onclick="closeLoanModal()"></div>
+  <div id="loan-sheet" class="modal-sheet absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl max-h-[92vh] overflow-y-auto">
+    <div class="w-10 h-1 bg-outline-variant/40 rounded-full mx-auto mt-3 mb-2"></div>
+    <div class="px-5 pb-8 space-y-4">
+      <h2 class="text-xl font-black font-heebo text-primary text-center">הוספת הלוואה</h2>
+      <input id="loan-edit-id" type="hidden"/>
+
+      <div class="space-y-1">
+        <label class="text-xs font-bold font-heebo text-on-surface-variant">מטרת ההלוואה</label>
+        <input id="loan-purpose" type="text" placeholder="לדוגמה: משכנתא, רכב..." class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm"/>
+      </div>
+
+      <div class="flex items-center justify-between py-2 px-1">
+        <div>
+          <span class="text-sm font-heebo font-bold text-primary">מינוף (Leverage)</span>
+          <span class="block text-xs text-on-surface-variant">האם ההלוואה ממונפת?</span>
+        </div>
+        <button type="button" id="leverage-toggle" onclick="toggleLeverage()" class="w-12 h-6 rounded-full bg-outline-variant relative transition-colors">
+          <div id="leverage-thumb" class="absolute top-1 right-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all"></div>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="space-y-1">
+          <label class="text-xs font-bold font-heebo text-on-surface-variant">תאריך קבלה</label>
+          <input id="loan-disbursement" type="date" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm"/>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-bold font-heebo text-on-surface-variant">תאריך סיום</label>
+          <input id="loan-repayment" type="date" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm"/>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="space-y-1">
+          <label class="text-xs font-bold font-heebo text-on-surface-variant">קרן (₪)</label>
+          <input id="loan-principal" type="number" inputmode="decimal" min="0" placeholder="0" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr"/>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-bold font-heebo text-on-surface-variant">ריבית שנתית %</label>
+          <input id="loan-rate" type="number" inputmode="decimal" min="0" max="100" placeholder="0" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr"/>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <label class="text-xs font-bold font-heebo text-on-surface-variant">סוג הצמדה</label>
+        <select id="loan-indexation" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm">
+          <option value="NONE">ללא הצמדה</option>
+          <option value="CPI">מדד המחירים לצרכן</option>
+          <option value="USD">דולר ארה"ב</option>
+          <option value="EUR">אירו</option>
+          <option value="PRIME">פריים</option>
+        </select>
+      </div>
+
+      <button onclick="saveLoan()" class="w-full signature-gradient text-white font-heebo font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform">
+        שמירת הלוואה
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADD BUCKET MODAL ═══ -->
+<div id="bucket-modal" class="fixed inset-0 z-[70] hidden">
+  <div class="modal-backdrop absolute inset-0" onclick="closeBucketModal()"></div>
+  <div id="bucket-sheet" class="modal-sheet absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl max-h-[92vh] overflow-y-auto">
+    <div class="w-10 h-1 bg-outline-variant/40 rounded-full mx-auto mt-3 mb-2"></div>
+    <div class="px-5 pb-8 space-y-4">
+      <h2 class="text-xl font-black font-heebo text-primary text-center">קופה חדשה</h2>
+      <div class="space-y-1"><label class="text-xs font-bold font-heebo text-on-surface-variant">שם הקופה</label>
+        <input id="bucket-name" type="text" placeholder="לדוגמה: חופשה ביפן" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm"/></div>
+      <div class="space-y-1"><label class="text-xs font-bold font-heebo text-on-surface-variant">יעד (₪)</label>
+        <input id="bucket-target" type="number" inputmode="decimal" min="0" placeholder="0" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr"/></div>
+      <div class="space-y-1"><label class="text-xs font-bold font-heebo text-on-surface-variant">סכום נוכחי (₪)</label>
+        <input id="bucket-current" type="number" inputmode="decimal" min="0" value="0" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr"/></div>
+      <div class="space-y-1">
+        <label class="text-xs font-bold font-heebo text-on-surface-variant">אייקון</label>
+        <div id="bucket-icon-picker" class="flex flex-wrap gap-2">
+          <button type="button" onclick="selectIcon(this,'account_balance_wallet')" class="icon-btn w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center text-primary ring-2 ring-primary"><span class="material-symbols-outlined text-sm">account_balance_wallet</span></button>
+          <button type="button" onclick="selectIcon(this,'flight_takeoff')" class="icon-btn w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">flight_takeoff</span></button>
+          <button type="button" onclick="selectIcon(this,'directions_car')" class="icon-btn w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">directions_car</span></button>
+          <button type="button" onclick="selectIcon(this,'home')" class="icon-btn w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">home</span></button>
+          <button type="button" onclick="selectIcon(this,'monitoring')" class="icon-btn w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">monitoring</span></button>
+          <button type="button" onclick="selectIcon(this,'school')" class="icon-btn w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">school</span></button>
+          <button type="button" onclick="selectIcon(this,'favorite')" class="icon-btn w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">favorite</span></button>
+          <button type="button" onclick="selectIcon(this,'savings')" class="icon-btn w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center text-primary"><span class="material-symbols-outlined text-sm">savings</span></button>
+        </div>
+      </div>
+      <button onclick="saveBucket()" class="w-full signature-gradient text-white font-heebo font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform">יצירת קופה</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EDIT BUCKET MODAL ═══ -->
+<div id="edit-bucket-modal" class="fixed inset-0 z-[70] hidden">
+  <div class="modal-backdrop absolute inset-0" onclick="closeEditBucket()"></div>
+  <div id="edit-bucket-sheet" class="modal-sheet absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl max-h-[92vh] overflow-y-auto">
+    <div class="w-10 h-1 bg-outline-variant/40 rounded-full mx-auto mt-3 mb-2"></div>
+    <div class="px-5 pb-8 space-y-4">
+      <h2 class="text-xl font-black font-heebo text-primary text-center">עדכון קופה</h2>
+      <input id="edit-bucket-id" type="hidden"/>
+      <div class="space-y-1"><label class="text-xs font-bold font-heebo text-on-surface-variant">הוסף / הפחת (₪)</label>
+        <input id="edit-bucket-amount" type="number" inputmode="decimal" placeholder="0" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-lg" dir="ltr"/></div>
+      <p class="text-xs text-on-surface-variant">מספר חיובי להוספה, שלילי להפחתה</p>
+      <button onclick="updateBucket()" class="w-full signature-gradient text-white font-heebo font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform">עדכן</button>
+      <button onclick="deleteBucket()" class="w-full border-2 border-error text-error font-heebo font-bold py-3 rounded-xl active:scale-95 transition-transform">מחק קופה</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast fixed bottom-32 left-1/2 -translate-x-1/2 z-[80] px-5 py-2.5 rounded-2xl shadow-xl font-heebo font-bold text-sm whitespace-nowrap"></div>
+
+<!-- PIN LOCK -->
+<div id="pin-lock" class="fixed inset-0 z-[90] bg-background hidden flex-col items-center justify-center gap-5 p-8">
+  <div class="w-20 h-20 signature-gradient rounded-3xl flex items-center justify-center shadow-xl">
+    <span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings:'FILL' 1">shield_with_heart</span>
+  </div>
+  <h2 class="font-heebo font-bold text-2xl text-primary">שפע</h2>
+  <p class="text-on-surface-variant text-sm">הזן קוד כניסה</p>
+  <div class="flex gap-4" id="pin-dots">
+    <div class="w-4 h-4 rounded-full bg-outline-variant transition-all"></div>
+    <div class="w-4 h-4 rounded-full bg-outline-variant transition-all"></div>
+    <div class="w-4 h-4 rounded-full bg-outline-variant transition-all"></div>
+    <div class="w-4 h-4 rounded-full bg-outline-variant transition-all"></div>
+  </div>
+  <div class="grid grid-cols-3 gap-4 mt-2">
+    <button onclick="pinKey('1')" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary font-heebo font-bold text-2xl active:scale-90 transition-transform">1</button>
+    <button onclick="pinKey('2')" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary font-heebo font-bold text-2xl active:scale-90 transition-transform">2</button>
+    <button onclick="pinKey('3')" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary font-heebo font-bold text-2xl active:scale-90 transition-transform">3</button>
+    <button onclick="pinKey('4')" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary font-heebo font-bold text-2xl active:scale-90 transition-transform">4</button>
+    <button onclick="pinKey('5')" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary font-heebo font-bold text-2xl active:scale-90 transition-transform">5</button>
+    <button onclick="pinKey('6')" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary font-heebo font-bold text-2xl active:scale-90 transition-transform">6</button>
+    <button onclick="pinKey('7')" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary font-heebo font-bold text-2xl active:scale-90 transition-transform">7</button>
+    <button onclick="pinKey('8')" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary font-heebo font-bold text-2xl active:scale-90 transition-transform">8</button>
+    <button onclick="pinKey('9')" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary font-heebo font-bold text-2xl active:scale-90 transition-transform">9</button>
+    <div></div>
+    <button onclick="pinKey('0')" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary font-heebo font-bold text-2xl active:scale-90 transition-transform">0</button>
+    <button onclick="pinDelete()" class="w-16 h-16 rounded-2xl bg-surface-container-high text-primary flex items-center justify-center active:scale-90 transition-transform"><span class="material-symbols-outlined">backspace</span></button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════
+const SK = { tx:'shefa_tx', buckets:'shefa_buckets', config:'shefa_config', loans:'shefa_loans', categories:'shefa_cats' };
+const def_cfg = { bankBalance:0, profitRate:10, pinCode:'', currency:'ILS' };
+const def_cats = ['מזון','פנאי','מגורים','תחבורה','בריאות','חינוך','משכורת','עסקים','חיסכון','אחר'];
+
+function getConfig(){ try{ return {...def_cfg,...JSON.parse(localStorage.getItem(SK.config)||'{}')} }catch{return{...def_cfg}} }
+function saveConfig(c){ localStorage.setItem(SK.config,JSON.stringify(c)) }
+function getTx(){ try{ return JSON.parse(localStorage.getItem(SK.tx)||'[]') }catch{return[]} }
+function saveTxs(t){ localStorage.setItem(SK.tx,JSON.stringify(t)) }
+function getBuckets(){ try{ return JSON.parse(localStorage.getItem(SK.buckets)||'[]') }catch{return[]} }
+function saveBuckets(b){ localStorage.setItem(SK.buckets,JSON.stringify(b)) }
+function getLoans(){ try{ return JSON.parse(localStorage.getItem(SK.loans)||'[]') }catch{return[]} }
+function saveLoans(l){ localStorage.setItem(SK.loans,JSON.stringify(l)) }
+function getCategories(){ try{ return JSON.parse(localStorage.getItem(SK.categories)||JSON.stringify(def_cats)) }catch{return def_cats} }
+function saveCategories(c){ localStorage.setItem(SK.categories,JSON.stringify(c)) }
+
+// ══════════════════════════════════════════
+// CORE ENGINE
+// ══════════════════════════════════════════
+function calcRealBalance(){
+  const cfg = getConfig(), txs = getTx();
+  const now = new Date(), cm = now.getMonth(), cy = now.getFullYear();
+  let obligations = 0;
+  txs.forEach(tx => {
+    if(tx.type !== 'expense') return;
+    if(tx.isRecurring){
+      // Check if still active
+      if(tx.endDate && new Date(tx.endDate) < now) return;
+      obligations += tx.amount; return;
+    }
+    if(tx.installments && tx.installments.total > 1){
+      const td = new Date(tx.date);
+      const ms = (cy - td.getFullYear())*12 + (cm - td.getMonth());
+      if(ms >= 0 && ms < tx.installments.total){
+        obligations += tx.installments.monthlyPayment || (tx.amount / tx.installments.total);
+      }
+      return;
+    }
+    const td = new Date(tx.date);
+    if(td.getMonth()===cm && td.getFullYear()===cy) obligations += tx.amount;
+  });
+  return cfg.bankBalance - obligations;
+}
+
+function calcProfit(){
+  const cfg = getConfig(), txs = getTx();
+  let p = 0;
+  txs.forEach(tx => { if(tx.type==='income') p += tx.amount*(cfg.profitRate/100); });
+  return p;
+}
+
+// Amortization formula: M = P * [r(1+r)^n] / [(1+r)^n - 1]
+function calcMonthlyPayment(principal, annualRate, numMonths){
+  if(!annualRate || annualRate===0) return principal / numMonths;
+  const r = annualRate / 100 / 12;
+  return principal * (r * Math.pow(1+r, numMonths)) / (Math.pow(1+r, numMonths) - 1);
+}
+
+// Remaining loan balance after k payments: B = P(1+r)^k - M*[(1+r)^k - 1]/r
+function calcLoanRemaining(loan){
+  const now = new Date();
+  const start = new Date(loan.disbursementDate);
+  const end = new Date(loan.finalRepaymentDate);
+  const totalMonths = Math.max(1, Math.round((end - start) / (1000*60*60*24*30.44)));
+  const elapsed = Math.max(0, Math.round((now - start) / (1000*60*60*24*30.44)));
+  if(elapsed >= totalMonths) return 0;
+  const principal = loan.principalAmount;
+  if(!loan.interestRate || loan.interestRate===0){
+    return principal * (1 - elapsed/totalMonths);
+  }
+  const r = loan.interestRate / 100 / 12;
+  const M = calcMonthlyPayment(principal, loan.interestRate, totalMonths);
+  const remaining = principal*Math.pow(1+r,elapsed) - M*(Math.pow(1+r,elapsed)-1)/r;
+  return Math.max(0, remaining);
+}
+
+function calcLoanMonthly(loan){
+  const start = new Date(loan.disbursementDate);
+  const end = new Date(loan.finalRepaymentDate);
+  const totalMonths = Math.max(1, Math.round((end - start) / (1000*60*60*24*30.44)));
+  return calcMonthlyPayment(loan.principalAmount, loan.interestRate||0, totalMonths);
+}
+
+// Generate time series for line chart
+function getTimeSeries(rangeKey){
+  const now = new Date();
+  let startDate;
+  if(rangeKey==='7d') startDate = new Date(now - 7*86400000);
+  else if(rangeKey==='30d') startDate = new Date(now - 30*86400000);
+  else if(rangeKey==='3m') startDate = new Date(now - 90*86400000);
+  else if(rangeKey==='1y') startDate = new Date(now - 365*86400000);
+  else startDate = null; // all
+
+  const txs = getTx().filter(tx => {
+    if(!startDate) return true;
+    return new Date(tx.date) >= startDate;
+  });
+
+  if(txs.length === 0) return { points:[], totalIncome:0, totalExpense:0 };
+
+  // Expand recurring transactions within range
+  const expanded = [];
+  txs.forEach(tx => {
+    if(!tx.isRecurring){
+      expanded.push({ date: new Date(tx.date), amount: tx.amount, type: tx.type });
+      return;
+    }
+    const freq = tx.frequency || 'monthly';
+    let d = new Date(tx.date);
+    const endD = tx.endDate ? new Date(tx.endDate) : now;
+    const from = startDate || d;
+    while(d <= now && d <= endD){
+      if(d >= from) expanded.push({ date: new Date(d), amount: tx.amount, type: tx.type });
+      if(freq==='daily') d.setDate(d.getDate()+1);
+      else if(freq==='weekly') d.setDate(d.getDate()+7);
+      else if(freq==='monthly') d.setMonth(d.getMonth()+1);
+      else if(freq==='yearly') d.setFullYear(d.getFullYear()+1);
+    }
+  });
+
+  expanded.sort((a,b) => a.date - b.date);
+
+  let cumIncome = 0, cumExpense = 0;
+  const points = [];
+  expanded.forEach(e => {
+    if(e.type==='income') cumIncome += e.amount;
+    else cumExpense += e.amount;
+    points.push({ date:e.date, income:cumIncome, expense:cumExpense });
+  });
+
+  return { points, totalIncome: cumIncome, totalExpense: cumExpense };
+}
+
+// Category breakdown for pie charts
+function getCategoryBreakdown(type, rangeKey){
+  const now = new Date();
+  let startDate;
+  if(rangeKey==='7d') startDate = new Date(now - 7*86400000);
+  else if(rangeKey==='30d') startDate = new Date(now - 30*86400000);
+  else if(rangeKey==='3m') startDate = new Date(now - 90*86400000);
+  else if(rangeKey==='1y') startDate = new Date(now - 365*86400000);
+  else startDate = null;
+
+  const txs = getTx().filter(tx => {
+    if(tx.type !== type) return false;
+    if(startDate && new Date(tx.date) < startDate) return false;
+    return true;
+  });
+
+  const cats = {};
+  txs.forEach(tx => {
+    const cat = tx.category || 'אחר';
+    cats[cat] = (cats[cat]||0) + tx.amount;
+  });
+
+  const total = Object.values(cats).reduce((s,v)=>s+v,0);
+  return Object.entries(cats)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([label,amount])=>({ label, amount, pct: total>0 ? (amount/total*100).toFixed(1) : '0' }));
+}
+
+// ══════════════════════════════════════════
+// ROUTING
+// ══════════════════════════════════════════
+const PAGE_TITLES = { dashboard:'חשבון השפע שלך', cashflow:'ניהול תזרים', buckets:'קופות השפע', settings:'הגדרות' };
+let currentPage = 'dashboard', currentFilter = 'all', currentRange = '3m', cashflowTab = 'transactions';
+
+function navigateTo(page){
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el = document.getElementById('page-'+page);
+  if(el) el.classList.add('active');
+  document.getElementById('page-title').textContent = PAGE_TITLES[page]||page;
+  window.location.hash = page;
+  document.querySelectorAll('.nav-item').forEach(item=>{
+    const active = item.dataset.page === page;
+    item.classList.toggle('bg-slate-100', active);
+    item.classList.toggle('text-slate-900', active);
+    item.classList.toggle('text-slate-400', !active);
+    const icon = item.querySelector('.material-symbols-outlined');
+    if(icon) icon.style.fontVariationSettings = active ? "'FILL' 1" : "'FILL' 0";
+  });
+  if(page==='dashboard') renderDashboard();
+  if(page==='cashflow'){ renderCashflow(); if(cashflowTab==='loans') renderLoans(); }
+  if(page==='buckets') renderBuckets();
+  if(page==='settings') renderSettings();
+}
+
+// ══════════════════════════════════════════
+// FORMAT
+// ══════════════════════════════════════════
+const fmt = n => '₪' + Math.round(n).toLocaleString('he-IL');
+const fmtFull = n => '₪' + (+n).toLocaleString('he-IL',{minimumFractionDigits:2,maximumFractionDigits:2});
+const ICON_MAP = { 'מזון':'shopping_cart','פנאי':'sports_esports','מגורים':'home','תחבורה':'directions_car','בריאות':'favorite','חינוך':'school','משכורת':'payments','עסקים':'business_center','חיסכון':'savings','אחר':'more_horiz' };
+function catIcon(cat){ return ICON_MAP[cat] || 'category'; }
+
+const PIE_COLORS = ['#031631','#a6cfc3','#b6c7ea','#545f72','#1a2b47','#8293b4','#c1ebdf','#d5e0f7','#e7e8e9','#75777e'];
+const INCOME_COLORS = ['#16a34a','#4ade80','#22c55e','#86efac','#15803d','#dcfce7','#166534','#a7f3d0','#065f46','#6ee7b7'];
+
+// ══════════════════════════════════════════
+// DASHBOARD RENDER
+// ══════════════════════════════════════════
+function renderDashboard(){
+  const cfg = getConfig(), txs = getTx();
+  const hasData = cfg.bankBalance > 0 || txs.length > 0;
+
+  document.getElementById('dash-cards').style.display = hasData ? '' : 'none';
+  document.getElementById('dash-chart-section').style.display = hasData ? '' : 'none';
+  document.getElementById('dash-empty').style.display = hasData ? 'none' : '';
+
+  if(!hasData) return;
+
+  document.getElementById('bank-balance-display').textContent = fmt(cfg.bankBalance);
+  const real = calcRealBalance();
+  const realEl = document.getElementById('real-balance-display');
+  realEl.textContent = fmt(real);
+  realEl.style.color = real < 0 ? '#dc2626' : '';
+
+  const profit = calcProfit();
+  document.getElementById('profit-amount').textContent = fmt(profit);
+  const pBar = Math.min(100,(profit / Math.max(1, cfg.bankBalance * 0.2)) * 100);
+  document.getElementById('profit-bar').style.width = pBar + '%';
+
+  renderInsight();
+  renderLineChart(currentRange);
+  renderPieCharts(currentRange);
+}
+
+function renderInsight(){
+  const txs = getTx(), now = new Date();
+  const el = document.getElementById('insight-text');
+  if(!txs.length){ el.textContent='הזן תנועות לקבלת תובנות חכמות'; return; }
+  const thisMonth = txs.filter(t=>{ const d=new Date(t.date); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); });
+  const income = thisMonth.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
+  const expense = thisMonth.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+  if(income===0) { el.textContent='טרם נרשמו הכנסות החודש'; return; }
+  if(expense > income*0.8) { el.textContent=`שים לב: ההוצאות (${fmt(expense)}) מהוות ${Math.round(expense/income*100)}% מההכנסות החודש`; return; }
+  const saving = income - expense;
+  el.textContent = `החודש חסכת ${fmt(saving)} (${Math.round(saving/income*100)}% מההכנסות) 🎉`;
+}
+
+// ══════════════════════════════════════════
+// LINE CHART (SVG)
+// ══════════════════════════════════════════
+function setRange(r){
+  currentRange = r;
+  document.querySelectorAll('.range-tab').forEach(b=>{ b.classList.toggle('active', b.dataset.range===r); b.classList.toggle('text-secondary', b.dataset.range!==r); });
+  renderLineChart(r);
+  renderPieCharts(r);
+}
+
+function renderLineChart(rangeKey){
+  const svg = document.getElementById('line-chart-svg');
+  const { points, totalIncome, totalExpense } = getTimeSeries(rangeKey);
+
+  const net = totalIncome - totalExpense;
+  const netEl = document.getElementById('net-balance-indicator');
+  netEl.textContent = fmtFull(net);
+  netEl.style.color = net >= 0 ? '#16a34a' : '#dc2626';
+
+  if(!points.length){
+    svg.innerHTML = `<text x="350" y="110" text-anchor="middle" font-family="Heebo,sans-serif" font-size="14" fill="#75777e">אין נתונים לתקופה זו</text>`;
+    return;
+  }
+
+  const W=700, H=220, PAD={top:20,right:20,bottom:30,left:20};
+  const innerW=W-PAD.right-PAD.left, innerH=H-PAD.top-PAD.bottom;
+
+  const maxVal = Math.max(...points.map(p=>Math.max(p.income,p.expense)),1);
+  const minDate = points[0].date.getTime(), maxDate = points[points.length-1].date.getTime();
+  const dateRange = maxDate - minDate || 1;
+
+  function xScale(d){ return PAD.left + ((d.getTime()-minDate)/dateRange)*innerW; }
+  function yScale(v){ return PAD.top + innerH - (v/maxVal)*innerH; }
+
+  const incPts = points.map(p=>`${xScale(p.date).toFixed(1)},${yScale(p.income).toFixed(1)}`).join(' ');
+  const expPts = points.map(p=>`${xScale(p.date).toFixed(1)},${yScale(p.expense).toFixed(1)}`).join(' ');
+
+  // Build area fills
+  const firstX = xScale(points[0].date).toFixed(1);
+  const lastX = xScale(points[points.length-1].date).toFixed(1);
+  const baseY = (PAD.top+innerH).toFixed(1);
+
+  const incArea = `M ${firstX} ${baseY} L ${incPts.split(' ').map((pt,i)=>i===0?pt.replace(',',','): pt).join(' L ')} L ${lastX} ${baseY} Z`;
+  const expArea = `M ${firstX} ${baseY} L ${expPts.split(' ').map(pt=>pt).join(' L ')} L ${lastX} ${baseY} Z`;
+
+  // X-axis labels - sample a few dates
+  const labelCount = Math.min(5, points.length);
+  const step = Math.floor(points.length / labelCount);
+  const labels = [];
+  for(let i=0;i<points.length;i+=Math.max(1,step)){
+    const p = points[i];
+    labels.push(`<text x="${xScale(p.date).toFixed(1)}" y="${H-4}" text-anchor="middle" font-family="Heebo,sans-serif" font-size="9" fill="#75777e">${p.date.toLocaleDateString('he-IL',{month:'short',day:'numeric'})}</text>`);
+  }
+
+  // Y-axis grid
+  const grids = [0,.25,.5,.75,1].map(f=>{
+    const y=(PAD.top+innerH - f*innerH).toFixed(1);
+    const val=fmt(maxVal*f);
+    return `<line x1="${PAD.left}" y1="${y}" x2="${W-PAD.right}" y2="${y}" stroke="#e7e8e9" stroke-width="1"/>
+            <text x="${PAD.left-2}" y="${parseFloat(y)+4}" text-anchor="end" font-family="Heebo,sans-serif" font-size="8" fill="#75777e">${val}</text>`;
+  }).join('');
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="incGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#16a34a" stop-opacity=".2"/><stop offset="100%" stop-color="#16a34a" stop-opacity="0"/></linearGradient>
+      <linearGradient id="expGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#dc2626" stop-opacity=".15"/><stop offset="100%" stop-color="#dc2626" stop-opacity="0"/></linearGradient>
+    </defs>
+    ${grids}
+    <path d="${incArea}" fill="url(#incGrad)"/>
+    <path d="${expArea}" fill="url(#expGrad)"/>
+    <polyline points="${incPts}" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="${expPts}" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    ${labels.join('')}
+  `;
+}
+
+// ══════════════════════════════════════════
+// PIE CHARTS (SVG donut)
+// ══════════════════════════════════════════
+function renderPieCharts(rangeKey){
+  const expBreakdown = getCategoryBreakdown('expense', rangeKey);
+  const incBreakdown = getCategoryBreakdown('income', rangeKey);
+  renderDonut('expense-pie','expense-legend', expBreakdown, PIE_COLORS);
+  renderDonut('income-pie','income-legend', incBreakdown, INCOME_COLORS);
+}
+
+function renderDonut(svgId, legendId, data, colors){
+  const svg = document.getElementById(svgId);
+  const legend = document.getElementById(legendId);
+
+  if(!data.length){
+    svg.innerHTML=`<text x="100" y="108" text-anchor="middle" font-family="Heebo,sans-serif" font-size="12" fill="#75777e">אין נתונים</text>`;
+    legend.innerHTML=''; return;
+  }
+
+  const cx=100, cy=100, R=78, r=50;
+  let angle = -Math.PI/2; // start at top
+  const total = data.reduce((s,d)=>s+d.amount,0);
+
+  let paths = '';
+  data.forEach((slice, i)=>{
+    const sweep = (slice.amount/total) * 2 * Math.PI;
+    const x1=cx+R*Math.cos(angle), y1=cy+R*Math.sin(angle);
+    const x2=cx+R*Math.cos(angle+sweep), y2=cy+R*Math.sin(angle+sweep);
+    const ix1=cx+r*Math.cos(angle+sweep), iy1=cy+r*Math.sin(angle+sweep);
+    const ix2=cx+r*Math.cos(angle), iy2=cy+r*Math.sin(angle);
+    const large = sweep > Math.PI ? 1 : 0;
+    const color = colors[i % colors.length];
+    paths += `<path d="M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${R} ${R} 0 ${large} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} L ${ix1.toFixed(2)} ${iy1.toFixed(2)} A ${r} ${r} 0 ${large} 0 ${ix2.toFixed(2)} ${iy2.toFixed(2)} Z" fill="${color}" class="pie-slice"/>`;
+    angle += sweep;
+  });
+
+  svg.innerHTML = paths + `<circle cx="${cx}" cy="${cy}" r="${r-2}" fill="#fff"/>`;
+
+  legend.innerHTML = data.slice(0,5).map((d,i)=>`
+    <div class="flex items-center justify-between text-xs font-heebo">
+      <div class="flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background:${colors[i%colors.length]}"></span>
+        <span class="text-on-surface">${d.label}</span>
+      </div>
+      <span class="font-bold text-primary">${fmtFull(d.amount)} <span class="text-on-surface-variant font-normal">(${d.pct}%)</span></span>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════
+// CASHFLOW RENDER
+// ══════════════════════════════════════════
+function filterTx(f){
+  currentFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>{
+    const active=b.dataset.filter===f;
+    b.classList.toggle('bg-primary',active); b.classList.toggle('text-on-primary',active);
+    b.classList.toggle('bg-surface-container-low',!active); b.classList.toggle('text-secondary',!active);
+  });
+  renderCashflow();
+}
+
+function renderCashflow(){
+  let txs = getTx().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(currentFilter!=='all') txs=txs.filter(t=>t.type===currentFilter);
+  const list=document.getElementById('tx-list'), empty=document.getElementById('tx-empty');
+  if(!txs.length){ list.innerHTML=''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  list.innerHTML = txs.map(tx=>{
+    const isInc=tx.type==='income';
+    const iconBg=isInc?'bg-income-bg':'bg-expense-bg';
+    const iconColor=isInc?'text-income-text':'text-expense-text';
+    const amtColor=isInc?'text-income':'text-expense-red';
+    const sign=isInc?'+':'-';
+    const dateStr=new Date(tx.date).toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'});
+    let tags=`<span class="px-2.5 py-1 bg-surface-container-low text-on-surface-variant text-xs font-bold rounded-lg">${tx.category||'אחר'}</span>`;
+    if(tx.isRecurring) tags+=`<span class="px-2.5 py-1 bg-secondary-container text-on-secondary-container text-xs font-bold rounded-lg">הוראת קבע${tx.frequency?(' · '+{daily:'יומי',weekly:'שבועי',monthly:'חודשי',yearly:'שנתי'}[tx.frequency]||''):''}</span>`;
+    if(tx.installments?.total>1) tags+=`<span class="px-2.5 py-1 bg-primary-fixed text-on-primary-fixed text-xs font-bold rounded-lg">תשלום ${tx.installments.current}/${tx.installments.total}</span>`;
+    return `
+    <div class="p-5 bg-surface-container-lowest rounded-3xl shadow-[0_8px_24px_-4px_rgba(3,22,49,.06)] border border-outline-variant/10 group hover:-translate-y-0.5 transition-all relative">
+      <button onclick="deleteTx('${tx.id}')" class="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-error-container rounded-lg">
+        <span class="material-symbols-outlined text-error text-sm">delete</span>
+      </button>
+      <div class="flex justify-between items-start">
+        <div class="flex gap-3">
+          <div class="w-11 h-11 ${iconBg} rounded-2xl flex items-center justify-center ${iconColor} flex-shrink-0">
+            <span class="material-symbols-outlined text-base">${catIcon(tx.category)}</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-primary leading-tight">${tx.title}</h3>
+            <p class="text-xs text-secondary mt-0.5">${dateStr}</p>
+          </div>
+        </div>
+        <div class="text-left flex-shrink-0 mr-8">
+          <p class="text-lg font-bold ${amtColor}">${sign} ${fmtFull(tx.amount)}</p>
+          ${tx.installments?.total>1 ? `<p class="text-xs text-on-surface-variant">${fmtFull(tx.installments.monthlyPayment||tx.amount/tx.installments.total)}/חודש</p>` : ''}
+        </div>
+      </div>
+      <div class="mt-3 flex gap-1.5 flex-wrap">${tags}</div>
+    </div>`;
+  }).join('');
+}
+
+function deleteTx(id){
+  if(!confirm('למחוק תנועה?')) return;
+  saveTxs(getTx().filter(t=>t.id!==id));
+  renderCashflow(); renderDashboard(); showToast('נמחק','error');
+}
+
+// ══════════════════════════════════════════
+// ADD TRANSACTION MODAL
+// ══════════════════════════════════════════
+let txTypeState = 'income';
+let isRecurring = false;
+let isInstall = false;
+let selectedIcon = 'account_balance_wallet';
+let isLeverageState = false;
+
+function setCashflowTab(tab){
+  cashflowTab = tab;
+  const txBtn = document.getElementById('cf-tab-tx');
+  const loansBtn = document.getElementById('cf-tab-loans');
+  const txSec = document.getElementById('cf-section-tx');
+  const loansSec = document.getElementById('cf-section-loans');
+  const isLoans = tab === 'loans';
+  txBtn.className = `flex-1 py-2.5 px-4 rounded-xl text-sm font-bold font-heebo transition-all ${!isLoans ? 'bg-primary text-on-primary' : 'text-secondary'}`;
+  loansBtn.className = `flex-1 py-2.5 px-4 rounded-xl text-sm font-bold font-heebo transition-all ${isLoans ? 'bg-primary text-on-primary' : 'text-secondary'}`;
+  txSec.classList.toggle('hidden', isLoans);
+  loansSec.classList.toggle('hidden', !isLoans);
+  if(isLoans) renderLoans();
+}
+
+function openFab(){
+  const page = currentPage;
+  if(page==='buckets'){ openBucketModal(); return; }
+  if(page==='cashflow' && cashflowTab==='loans'){ openLoanModal(); return; }
+  openTxModal();
+}
+
+function openTxModal(){
+  resetTxForm();
+  document.getElementById('tx-modal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('tx-sheet').classList.add('open'),10);
+}
+
+function closeTxModal(){
+  document.getElementById('tx-sheet').classList.remove('open');
+  setTimeout(()=>document.getElementById('tx-modal').classList.add('hidden'),300);
+}
+
+function resetTxForm(){
+  txTypeState='income'; isRecurring=false; isInstall=false;
+  setTxType('income');
+  document.getElementById('tx-amount').value='';
+  document.getElementById('tx-title').value='';
+  document.getElementById('tx-category-input').value='';
+  document.getElementById('tx-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('tx-end-date').value='';
+  document.getElementById('tx-installments').value='3';
+  document.getElementById('tx-interest').value='0';
+  document.getElementById('recurring-options').classList.add('hidden');
+  document.getElementById('installments-section').classList.add('hidden');
+  document.getElementById('install-fields').classList.add('hidden');
+  document.getElementById('installment-preview').classList.add('hidden');
+  // Reset toggles
+  ['recurring-toggle','install-toggle'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.classList.remove('bg-primary'); el.classList.add('bg-outline-variant');
+  });
+  document.getElementById('recurring-thumb').style.cssText='top:.25rem;right:.25rem;left:auto';
+  document.getElementById('install-thumb').style.cssText='top:.25rem;right:.25rem;left:auto';
+}
+
+function setTxType(type){
+  txTypeState=type;
+  const incBtn=document.getElementById('btn-income'), expBtn=document.getElementById('btn-expense');
+  incBtn.className=`btn-type btn-income flex-1 py-3 px-4 rounded-xl text-sm font-heebo transition-all flex items-center justify-center gap-2${type==='income'?' active':''}`;
+  expBtn.className=`btn-type btn-expense flex-1 py-3 px-4 rounded-xl text-sm font-heebo transition-all flex items-center justify-center gap-2${type==='expense'?' active':''}`;
+  if(type==='income'){ incBtn.classList.add('active'); expBtn.classList.remove('active'); }
+  else { expBtn.classList.add('active'); incBtn.classList.remove('active'); }
+  // Show installments section only for expenses
+  document.getElementById('installments-section').classList.toggle('hidden', type!=='expense');
+}
+
+function toggleRecurring(){
+  isRecurring=!isRecurring;
+  const track=document.getElementById('recurring-toggle'), thumb=document.getElementById('recurring-thumb');
+  track.classList.toggle('bg-primary',isRecurring); track.classList.toggle('bg-outline-variant',!isRecurring);
+  thumb.style.cssText=isRecurring?'top:.25rem;left:.25rem;right:auto':'top:.25rem;right:.25rem;left:auto';
+  document.getElementById('recurring-options').classList.toggle('hidden',!isRecurring);
+}
+
+function toggleInstallments(){
+  isInstall=!isInstall;
+  const track=document.getElementById('install-toggle'), thumb=document.getElementById('install-thumb');
+  track.classList.toggle('bg-primary',isInstall); track.classList.toggle('bg-outline-variant',!isInstall);
+  thumb.style.cssText=isInstall?'top:.25rem;left:.25rem;right:auto':'top:.25rem;right:.25rem;left:auto';
+  document.getElementById('install-fields').classList.toggle('hidden',!isInstall);
+  if(!isInstall) document.getElementById('installment-preview').classList.add('hidden');
+  else updateInstallmentPreview();
+}
+
+function updateInstallmentPreview(){
+  if(!isInstall){ document.getElementById('installment-preview').classList.add('hidden'); return; }
+  const amount=parseFloat(document.getElementById('tx-amount').value)||0;
+  const n=parseInt(document.getElementById('tx-installments').value)||1;
+  const rate=parseFloat(document.getElementById('tx-interest').value)||0;
+  if(!amount||!n){ document.getElementById('installment-preview').classList.add('hidden'); return; }
+  const monthly=calcMonthlyPayment(amount,rate,n);
+  document.getElementById('monthly-payment-preview').textContent=fmtFull(monthly)+' לחודש';
+  document.getElementById('installment-preview').classList.remove('hidden');
+}
+
+// Combobox
+function showCombo(){
+  const cats=getCategories();
+  renderCombo(cats);
+  document.getElementById('combo-dropdown').classList.remove('hidden');
+}
+function hideCombo(){ document.getElementById('combo-dropdown').classList.add('hidden'); }
+function filterCombo(){
+  const val=document.getElementById('tx-category-input').value.toLowerCase();
+  const cats=getCategories().filter(c=>c.toLowerCase().includes(val));
+  const showAdd = val.length>1 && !getCategories().some(c=>c.toLowerCase()===val.toLowerCase());
+  renderCombo(cats, showAdd ? document.getElementById('tx-category-input').value : null);
+  document.getElementById('combo-dropdown').classList.remove('hidden');
+}
+function renderCombo(cats, addNew=null){
+  const dd=document.getElementById('combo-dropdown');
+  let html=cats.map(c=>`<div class="combo-option" onclick="selectCat('${c.replace(/'/g,"\\'")}')"><span class="material-symbols-outlined text-sm text-on-surface-variant mr-2">${catIcon(c)}</span>${c}</div>`).join('');
+  if(addNew) html+=`<div class="combo-option font-bold text-primary" onclick="addNewCat('${addNew.replace(/'/g,"\\'")}')"><span class="material-symbols-outlined text-sm mr-2">add</span>הוסף "${addNew}"</div>`;
+  dd.innerHTML=html||'<div class="combo-option text-on-surface-variant">אין תוצאות</div>';
+}
+function selectCat(cat){ document.getElementById('tx-category-input').value=cat; hideCombo(); }
+function addNewCat(cat){
+  const cats=getCategories();
+  if(!cats.includes(cat)){ cats.push(cat); saveCategories(cats); }
+  selectCat(cat);
+}
+
+function saveTx(){
+  const amount=parseFloat(document.getElementById('tx-amount').value);
+  const title=document.getElementById('tx-title').value.trim();
+  const category=document.getElementById('tx-category-input').value.trim()||'אחר';
+  const date=document.getElementById('tx-date').value;
+  const endDate=document.getElementById('tx-end-date').value||null;
+  const frequency=document.getElementById('tx-frequency').value;
+
+  if(!amount||amount<=0){ showToast('הזן סכום תקין','error'); return; }
+  if(!title){ showToast('הזן כותרת','error'); return; }
+  if(!date){ showToast('בחר תאריך','error'); return; }
+
+  let installments=null;
+  if(txTypeState==='expense' && isInstall){
+    const n=parseInt(document.getElementById('tx-installments').value)||1;
+    const rate=parseFloat(document.getElementById('tx-interest').value)||0;
+    const monthly=calcMonthlyPayment(amount,rate,n);
+    installments={ total:n, current:1, rate, monthlyPayment:monthly };
+  }
+
+  const tx = {
+    id: Date.now().toString(36)+Math.random().toString(36).substr(2,5),
+    title, amount, type:txTypeState, category, date,
+    installments, isRecurring, frequency: isRecurring?frequency:null, endDate: isRecurring?endDate:null
+  };
+
+  const txs=getTx();
+  txs.push(tx);
+  saveTxs(txs);
+
+  // Profit First
+  if(txTypeState==='income'){
+    const cfg=getConfig();
+    const profitAmt=amount*(cfg.profitRate/100);
+    const buckets=getBuckets();
+    let pb=buckets.find(b=>b.name==='רווח (Profit)');
+    if(!pb){ pb={id:'profit_'+Date.now().toString(36),name:'רווח (Profit)',currentAmount:0,targetAmount:50000,icon:'savings'}; buckets.push(pb); }
+    pb.currentAmount+=profitAmt;
+    saveBuckets(buckets);
+  }
+
+  closeTxModal();
+  const sign=txTypeState==='income'?'+':'-';
+  document.getElementById('tx-success-detail').textContent=`${sign}${fmtFull(amount)} · ${category}`;
+  const banner=document.getElementById('tx-success-banner');
+  banner.classList.remove('hidden');
+  setTimeout(()=>banner.classList.add('hidden'),4000);
+
+  showToast('תנועה נשמרה! ✓','success');
+  if(currentPage==='cashflow') renderCashflow();
+  renderDashboard();
+}
+
+// ══════════════════════════════════════════
+// LOANS
+// ══════════════════════════════════════════
+function openLoanModal(loanId=null){
+  document.getElementById('loan-edit-id').value=loanId||'';
+  isLeverageState=false;
+  // Reset
+  ['loan-purpose','loan-disbursement','loan-repayment','loan-principal','loan-rate'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('loan-indexation').value='NONE';
+  const track=document.getElementById('leverage-toggle'), thumb=document.getElementById('leverage-thumb');
+  track.classList.remove('bg-primary'); track.classList.add('bg-outline-variant');
+  thumb.style.cssText='top:.25rem;right:.25rem;left:auto';
+
+  if(loanId){
+    const loan=getLoans().find(l=>l.id===loanId);
+    if(loan){
+      document.getElementById('loan-purpose').value=loan.purpose;
+      isLeverageState=loan.isLeverage;
+      document.getElementById('loan-disbursement').value=loan.disbursementDate;
+      document.getElementById('loan-repayment').value=loan.finalRepaymentDate;
+      document.getElementById('loan-principal').value=loan.principalAmount;
+      document.getElementById('loan-rate').value=loan.interestRate||0;
+      document.getElementById('loan-indexation').value=loan.indexationType||'NONE';
+      if(isLeverageState){ track.classList.replace('bg-outline-variant','bg-primary'); thumb.style.cssText='top:.25rem;left:.25rem;right:auto'; }
+    }
+  }
+  document.getElementById('loan-modal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('loan-sheet').classList.add('open'),10);
+}
+
+function closeLoanModal(){
+  document.getElementById('loan-sheet').classList.remove('open');
+  setTimeout(()=>document.getElementById('loan-modal').classList.add('hidden'),300);
+}
+
+function toggleLeverage(){
+  isLeverageState=!isLeverageState;
+  const track=document.getElementById('leverage-toggle'), thumb=document.getElementById('leverage-thumb');
+  track.classList.toggle('bg-primary',isLeverageState); track.classList.toggle('bg-outline-variant',!isLeverageState);
+  thumb.style.cssText=isLeverageState?'top:.25rem;left:.25rem;right:auto':'top:.25rem;right:.25rem;left:auto';
+}
+
+function saveLoan(){
+  const purpose=document.getElementById('loan-purpose').value.trim();
+  const disb=document.getElementById('loan-disbursement').value;
+  const rep=document.getElementById('loan-repayment').value;
+  const principal=parseFloat(document.getElementById('loan-principal').value);
+  const rate=parseFloat(document.getElementById('loan-rate').value)||0;
+  const indexation=document.getElementById('loan-indexation').value;
+  const editId=document.getElementById('loan-edit-id').value;
+
+  if(!purpose){ showToast('הזן מטרת הלוואה','error'); return; }
+  if(!disb||!rep){ showToast('הזן תאריכים','error'); return; }
+  if(!principal||principal<=0){ showToast('הזן סכום קרן','error'); return; }
+  if(new Date(rep)<=new Date(disb)){ showToast('תאריך סיום חייב להיות אחרי תאריך קבלה','error'); return; }
+
+  const loan={
+    id: editId||Date.now().toString(36)+Math.random().toString(36).substr(2,5),
+    purpose, isLeverage:isLeverageState,
+    disbursementDate:disb, finalRepaymentDate:rep,
+    interestRate:rate, indexationType:indexation, principalAmount:principal
+  };
+
+  const loans=getLoans();
+  if(editId){ const i=loans.findIndex(l=>l.id===editId); if(i>=0) loans[i]=loan; else loans.push(loan); }
+  else loans.push(loan);
+  saveLoans(loans);
+
+  closeLoanModal();
+  renderLoans();
+  showToast('הלוואה נשמרה! ✓','success');
+}
+
+function deleteLoan(id){
+  if(!confirm('למחוק הלוואה?')) return;
+  saveLoans(getLoans().filter(l=>l.id!==id));
+  renderLoans(); showToast('נמחק','error');
+}
+
+function renderLoans(){
+  const loans=getLoans();
+  const list=document.getElementById('loans-list'), empty=document.getElementById('loans-empty');
+  const totalRemaining=loans.reduce((s,l)=>s+calcLoanRemaining(l),0);
+  const totalMonthly=loans.reduce((s,l)=>s+calcLoanMonthly(l),0);
+  document.getElementById('loans-total').textContent=fmt(totalRemaining);
+  document.getElementById('loans-monthly').textContent=fmt(totalMonthly);
+
+  if(!loans.length){ list.innerHTML=''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+
+  const INDEX_LABELS={NONE:'ללא הצמדה',CPI:'מדד המחירים',USD:'דולר ארה"ב',EUR:'אירו',PRIME:'פריים'};
+
+  list.innerHTML=loans.map(loan=>{
+    const remaining=calcLoanRemaining(loan);
+    const monthly=calcLoanMonthly(loan);
+    const pct=Math.max(0,Math.min(100,(1 - remaining/loan.principalAmount)*100));
+    const daysLeft=Math.max(0,Math.round((new Date(loan.finalRepaymentDate)-new Date())/86400000));
+    return `
+    <div class="bg-surface-container-lowest rounded-3xl p-5 shadow-[0_8px_24px_-4px_rgba(3,22,49,.06)] border border-outline-variant/10 space-y-4">
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <h3 class="font-bold text-lg text-primary">${loan.purpose}</h3>
+            ${loan.isLeverage?'<span class="text-xs font-bold px-2 py-0.5 leverage-badge rounded-full">מינוף</span>':''}
+          </div>
+          <p class="text-xs text-on-surface-variant">${INDEX_LABELS[loan.indexationType]||'ללא'} · ריבית ${loan.interestRate||0}%</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="openLoanModal('${loan.id}')" class="p-2 hover:bg-surface-container rounded-xl transition-colors"><span class="material-symbols-outlined text-secondary text-sm">edit</span></button>
+          <button onclick="deleteLoan('${loan.id}')" class="p-2 hover:bg-error-container rounded-xl transition-colors"><span class="material-symbols-outlined text-error text-sm">delete</span></button>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-3 text-center">
+        <div class="bg-surface-container-low rounded-2xl p-3">
+          <p class="text-xs text-on-surface-variant mb-1">קרן מקורית</p>
+          <p class="font-bold text-primary font-heebo text-sm">${fmt(loan.principalAmount)}</p>
+        </div>
+        <div class="bg-surface-container-low rounded-2xl p-3">
+          <p class="text-xs text-on-surface-variant mb-1">יתרה נוכחית</p>
+          <p class="font-bold text-expense-red font-heebo text-sm">${fmt(remaining)}</p>
+        </div>
+        <div class="bg-surface-container-low rounded-2xl p-3">
+          <p class="text-xs text-on-surface-variant mb-1">תשלום חודשי</p>
+          <p class="font-bold text-primary font-heebo text-sm">${fmt(monthly)}</p>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between text-xs text-on-surface-variant mb-1.5">
+          <span>נפרע ${pct.toFixed(0)}%</span>
+          <span>${daysLeft} ימים לסיום</span>
+        </div>
+        <div class="w-full h-2 bg-outline-variant/30 rounded-full overflow-hidden">
+          <div class="h-full signature-gradient rounded-full transition-all" style="width:${pct.toFixed(1)}%"></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// BUCKETS
+// ══════════════════════════════════════════
+function openBucketModal(){
+  document.getElementById('bucket-name').value=''; document.getElementById('bucket-target').value=''; document.getElementById('bucket-current').value='0';
+  selectedIcon='account_balance_wallet';
+  document.querySelectorAll('.icon-btn').forEach(b=>b.classList.toggle('ring-2 ring-primary',false));
+  document.querySelector('.icon-btn')?.classList.add('ring-2','ring-primary');
+  document.getElementById('bucket-modal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('bucket-sheet').classList.add('open'),10);
+}
+function closeBucketModal(){
+  document.getElementById('bucket-sheet').classList.remove('open');
+  setTimeout(()=>document.getElementById('bucket-modal').classList.add('hidden'),300);
+}
+function selectIcon(btn,icon){
+  selectedIcon=icon;
+  document.querySelectorAll('.icon-btn').forEach(b=>{b.classList.remove('ring-2','ring-primary')});
+  btn.classList.add('ring-2','ring-primary');
+}
+function saveBucket(){
+  const name=document.getElementById('bucket-name').value.trim();
+  const target=parseFloat(document.getElementById('bucket-target').value);
+  const current=parseFloat(document.getElementById('bucket-current').value)||0;
+  if(!name){ showToast('הזן שם','error'); return; }
+  if(!target||target<=0){ showToast('הזן יעד','error'); return; }
+  const buckets=getBuckets();
+  buckets.push({ id:Date.now().toString(36)+Math.random().toString(36).substr(2,5), name, currentAmount:current, targetAmount:target, icon:selectedIcon });
+  saveBuckets(buckets);
+  closeBucketModal(); renderBuckets(); showToast('קופה נוצרה! ✓','success');
+}
+function openEditBucket(id){
+  document.getElementById('edit-bucket-id').value=id;
+  document.getElementById('edit-bucket-amount').value='';
+  document.getElementById('edit-bucket-modal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('edit-bucket-sheet').classList.add('open'),10);
+}
+function closeEditBucket(){
+  document.getElementById('edit-bucket-sheet').classList.remove('open');
+  setTimeout(()=>document.getElementById('edit-bucket-modal').classList.add('hidden'),300);
+}
+function updateBucket(){
+  const id=document.getElementById('edit-bucket-id').value;
+  const amt=parseFloat(document.getElementById('edit-bucket-amount').value);
+  if(isNaN(amt)||amt===0){ showToast('הזן סכום','error'); return; }
+  const buckets=getBuckets(), b=buckets.find(x=>x.id===id);
+  if(!b) return;
+  const was=b.currentAmount;
+  b.currentAmount=Math.max(0,b.currentAmount+amt);
+  saveBuckets(buckets);
+  if(was<b.targetAmount && b.currentAmount>=b.targetAmount) triggerConfetti();
+  closeEditBucket(); renderBuckets(); showToast('עודכן! ✓','success');
+}
+function deleteBucket(){
+  const id=document.getElementById('edit-bucket-id').value;
+  if(!confirm('למחוק?')) return;
+  saveBuckets(getBuckets().filter(b=>b.id!==id));
+  closeEditBucket(); renderBuckets(); showToast('נמחק','error');
+}
+function renderBuckets(){
+  const buckets=getBuckets(), grid=document.getElementById('bucket-grid');
+  let html=buckets.map(b=>{
+    const pct=b.targetAmount>0?Math.min(100,Math.round(b.currentAmount/b.targetAmount*100)):0;
+    const done=pct>=100;
+    return `
+    <div onclick="openEditBucket('${b.id}')" class="group bg-surface-container-lowest rounded-xl p-7 shadow-[0_8px_24px_-4px_rgba(3,22,49,.08)] border ${done?'border-2 border-tertiary-fixed-dim/30 success-glow':'border-outline-variant/10 hover:border-outline-variant/30'} transition-all hover:-translate-y-1 cursor-pointer">
+      <div class="flex justify-between items-start mb-5">
+        <div class="w-12 h-12 rounded-2xl ${done?'bg-tertiary-fixed-dim/20':'bg-secondary-fixed/50'} flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-2xl" style="font-variation-settings:'FILL' 1">${b.icon}</span>
+        </div>
+        ${done?'<span class="text-xs font-bold px-3 py-1 rounded-full bg-tertiary-fixed-dim text-on-tertiary-fixed-variant uppercase tracking-wide">הושלם</span>':'<span class="text-xs text-on-surface-variant px-2 py-1 rounded-full border border-outline-variant/30">עוד '+fmt(Math.max(0,b.targetAmount-b.currentAmount))+'</span>'}
+      </div>
+      <h3 class="font-heebo font-bold text-xl text-primary mb-1">${b.name}</h3>
+      <div class="flex justify-between items-end mb-3 mt-4">
+        <div><span class="text-2xl font-bold text-primary">${fmt(b.currentAmount)}</span><span class="text-xs text-on-surface-variant block">מתוך ${fmt(b.targetAmount)}</span></div>
+        <span class="text-xl font-black ${done?'text-on-tertiary-container':'text-primary/40'}">${pct}%</span>
+      </div>
+      <div class="w-full h-1.5 bg-outline-variant/30 rounded-full overflow-hidden">
+        <div class="h-full signature-gradient transition-all" style="width:${pct}%"></div>
+      </div>
+    </div>`;
+  }).join('');
+  html+=`<div onclick="openBucketModal()" class="group bg-transparent border-2 border-dashed border-outline-variant/50 rounded-xl p-7 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container-low hover:border-outline transition-all">
+    <div class="w-14 h-14 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant mb-3 group-hover:scale-110 transition-transform">
+      <span class="material-symbols-outlined text-3xl">add</span>
+    </div>
+    <h3 class="font-heebo font-bold text-lg text-primary">קופה חדשה</h3>
+    <p class="text-on-surface-variant text-xs mt-1">הגדר יעד חדש</p>
+  </div>`;
+  grid.innerHTML=html;
+}
+
+// ══════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════
+function renderSettings(){
+  const cfg=getConfig();
+  document.getElementById('settings-bank-balance').value=cfg.bankBalance||'';
+  document.getElementById('settings-profit-rate').value=cfg.profitRate;
+  document.getElementById('profit-rate-val').textContent=cfg.profitRate+'%';
+}
+function saveBankBalance(){
+  const cfg=getConfig(); cfg.bankBalance=parseFloat(document.getElementById('settings-bank-balance').value)||0;
+  saveConfig(cfg); showToast('יתרה עודכנה! ✓','success'); renderDashboard();
+}
+function saveProfitRate(){
+  const cfg=getConfig(); cfg.profitRate=parseInt(document.getElementById('settings-profit-rate').value)||10;
+  saveConfig(cfg); showToast('נשמר! ✓','success');
+}
+function savePin(){
+  const pin=document.getElementById('settings-pin').value;
+  if(pin.length!==4||!/^\d{4}$/.test(pin)){ showToast('הזן 4 ספרות','error'); return; }
+  const cfg=getConfig(); cfg.pinCode=pin; saveConfig(cfg);
+  document.getElementById('settings-pin').value=''; showToast('קוד נשמר! ✓','success');
+}
+function exportData(){
+  const data={transactions:getTx(),buckets:getBuckets(),loans:getLoans(),config:getConfig(),categories:getCategories(),exportDate:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=`shefa-backup-${new Date().toISOString().split('T')[0]}.json`; a.click();
+  URL.revokeObjectURL(url); showToast('יוצא! ✓','success');
+}
+function importData(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(ev){ try{
+    const d=JSON.parse(ev.target.result);
+    if(d.transactions) saveTxs(d.transactions);
+    if(d.buckets) saveBuckets(d.buckets);
+    if(d.loans) saveLoans(d.loans);
+    if(d.config) saveConfig(d.config);
+    if(d.categories) saveCategories(d.categories);
+    showToast('יובא! ✓','success'); navigateTo(currentPage);
+  }catch{ showToast('שגיאה בקובץ','error'); }};
+  reader.readAsText(file);
+}
+
+// ══════════════════════════════════════════
+// PIN LOCK
+// ══════════════════════════════════════════
+let pinBuf='';
+function showPinLock(){
+  if(!getConfig().pinCode) return;
+  const el=document.getElementById('pin-lock');
+  el.classList.remove('hidden'); el.style.display='flex';
+  pinBuf=''; updatePinDots();
+}
+function pinKey(d){ if(pinBuf.length>=4) return; pinBuf+=d; updatePinDots(); if(pinBuf.length===4) checkPin(); }
+function pinDelete(){ pinBuf=pinBuf.slice(0,-1); updatePinDots(); }
+function updatePinDots(){
+  document.querySelectorAll('#pin-dots div').forEach((dot,i)=>{
+    dot.className=i<pinBuf.length?'w-4 h-4 rounded-full bg-primary transition-all scale-110':'w-4 h-4 rounded-full bg-outline-variant transition-all';
+  });
+}
+function checkPin(){
+  if(pinBuf===getConfig().pinCode){
+    document.getElementById('pin-lock').style.display='none';
+  } else {
+    document.getElementById('pin-dots').classList.add('animate-bounce');
+    setTimeout(()=>{ document.getElementById('pin-dots').classList.remove('animate-bounce'); pinBuf=''; updatePinDots(); },500);
+  }
+}
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+function showToast(msg, type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className=`toast fixed bottom-32 left-1/2 -translate-x-1/2 z-[80] px-5 py-2.5 rounded-2xl shadow-xl font-heebo font-bold text-sm whitespace-nowrap ${type==='success'?'bg-tertiary-fixed text-on-tertiary-fixed':'bg-error-container text-on-error-container'}`;
+  requestAnimationFrame(()=>t.classList.add('show'));
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+function triggerConfetti(){
+  const colors=['#031631','#a6cfc3','#b6c7ea','#c1ebdf','#d6e3ff'];
+  for(let i=0;i<60;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';
+    p.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDelay=Math.random()+'s';
+    p.style.animationDuration=(2+Math.random()*2)+'s';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),5000);
+  }
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+function init(){
+  try{
+    document.getElementById('loading-bar').style.width='100%';
+    setTimeout(()=>{
+      document.getElementById('loading-overlay').classList.add('fade-out');
+      setTimeout(()=>{ document.getElementById('loading-overlay').style.display='none'; },400);
+      showPinLock();
+      const hash=window.location.hash.replace('#','')||'dashboard';
+      navigateTo(hash);
+      setRange(currentRange);
+    },1000);
+  } catch(err){
+    console.error(err);
+    document.getElementById('error-boundary').classList.remove('hidden');
+    document.getElementById('error-boundary').style.display='flex';
+  }
+}
+
+window.addEventListener('hashchange',()=>{ const h=window.location.hash.replace('#','')||'dashboard'; if(h!==currentPage) navigateTo(h); });
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

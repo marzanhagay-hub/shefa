@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="he"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&amp;family=Manrope:wght@400;700&amp;family=Inter:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-high": "#e7e8e9",
+              "secondary-fixed-dim": "#bcc7dd",
+              "primary-container": "#1a2b47",
+              "on-primary-container": "#8293b4",
+              "tertiary": "#001b15",
+              "on-error": "#ffffff",
+              "background": "#f8f9fa",
+              "on-primary-fixed": "#081b37",
+              "inverse-surface": "#2e3132",
+              "primary": "#031631",
+              "on-secondary-fixed-variant": "#3c475a",
+              "tertiary-fixed-dim": "#a6cfc3",
+              "secondary-container": "#d5e0f7",
+              "surface-bright": "#f8f9fa",
+              "primary-fixed": "#d6e3ff",
+              "secondary-fixed": "#d8e3fa",
+              "on-tertiary-fixed": "#00201a",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#c1ebdf",
+              "on-surface": "#191c1d",
+              "on-surface-variant": "#44474d",
+              "tertiary-container": "#063129",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#b6c7ea",
+              "inverse-primary": "#b6c7ea",
+              "surface-container": "#edeeef",
+              "on-primary-fixed-variant": "#374765",
+              "surface": "#f8f9fa",
+              "on-secondary-container": "#586377",
+              "error": "#ba1a1a",
+              "surface-container-low": "#f3f4f5",
+              "secondary": "#545f72",
+              "outline-variant": "#c5c6ce",
+              "outline": "#75777e",
+              "on-tertiary-fixed-variant": "#274e45",
+              "surface-tint": "#4e5f7d",
+              "inverse-on-surface": "#f0f1f2",
+              "on-tertiary": "#ffffff",
+              "surface-variant": "#e1e3e4",
+              "surface-container-lowest": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-container-highest": "#e1e3e4",
+              "on-secondary-fixed": "#111c2c",
+              "surface-dim": "#d9dadb",
+              "on-secondary": "#ffffff",
+              "on-tertiary-container": "#729a8f",
+              "on-background": "#191c1d"
+            },
+            fontFamily: {
+              "heebo": ["Heebo", "sans-serif"],
+              "headline": ["Manrope", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+        .signature-gradient {
+            background: linear-gradient(135deg, #031631 0%, #1a2b47 100%);
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: rgba(78, 95, 125, 0.2) !important;
+            background-color: #ffffff !important;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
+<!-- SideNavBar Shell -->
+<aside class="fixed top-0 right-0 h-full w-64 z-40 bg-slate-50 border-l border-slate-200/15 flex flex-col p-6 font-heebo text-right tracking-tight shadow-[-12px_0_32px_-4px_rgba(3,22,49,0.08)]">
+<div class="text-xl font-bold text-[#031631] mb-8">
+            חשבון ההשפעה של חגי
+            <span class="block text-xs font-normal text-on-surface-variant opacity-60 mt-1 uppercase tracking-widest">The Digital Private Banker</span>
+</div>
+<nav class="flex flex-col space-y-2 flex-grow">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-[#1A2B47] hover:bg-slate-100 transition-all duration-300 rounded-xl" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-sm">בית</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#031631] font-bold bg-white/80 backdrop-blur-md rounded-xl shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="text-sm">תזריים</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-[#1A2B47] hover:bg-slate-100 transition-all duration-300 rounded-xl" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm">קופות</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-[#1A2B47] hover:bg-slate-100 transition-all duration-300 rounded-xl" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm">הגדרות</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-100/50">
+<div class="flex items-center gap-3 p-2">
+<img alt="Profile" class="w-10 h-10 rounded-full border-2 border-white shadow-sm" data-alt="Close-up portrait of a professional man with a friendly expression in a modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-WEjL470jKH1AzfM88E4C6TVJQVq0U4o2aGOtVh0AlDIyjS4Week6VQqtw4NEqK1B4MdF7vGxp_HOsG2HKMZ-1Ih6DBmfOOyJKCZTOe2mIIGG43twJXXg6X6ADQitgggWad4HXCUT7fjNYgU5cOZLxTM9LsQ4aVJaTQyUDW9bJO8HHacdfkcvEuxsZf7G_zdQ7sgcKwVcDBpy0fbwRTSQIBffvn7Gv-Z9qOPczQ7Zc5yqhATU7gd_lYEbFqVeDsDW1QIWo4MXyKs"/>
+<div class="text-right">
+<p class="text-xs font-bold text-primary">חגי לוין</p>
+<p class="text-[10px] text-on-surface-variant">מנוי Premium</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 left-0 right-64 h-16 z-30 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 w-full mr-64">
+<h1 class="font-heebo text-lg font-medium text-[#1A2B47]">הוספת תנועה חדשה</h1>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-100/50 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-100/50 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="mr-64 pt-24 pb-12 px-12 min-h-screen flex items-center justify-center">
+<div class="w-full max-w-4xl grid grid-cols-12 gap-8 items-start">
+<!-- Hero Typography / Context -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<div class="space-y-2">
+<span class="text-on-tertiary-fixed-variant bg-tertiary-fixed px-3 py-1 rounded-full text-xs font-bold tracking-tight">ניהול תזרים</span>
+<h2 class="font-heebo text-4xl font-extrabold text-primary leading-tight">דיוק הוא הבסיס לצמיחה.</h2>
+<p class="text-on-surface-variant leading-relaxed text-sm">הזן את פרטי התנועה החדשה כדי לעדכן את מאזן ההשפעה הדיגיטלי שלך. המערכת תנתח אוטומטית את ההשפעה על היעדים השנתיים.</p>
+</div>
+<div class="p-6 bg-surface-container-low rounded-2xl space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-xs font-medium text-on-secondary-container opacity-70">יתרה נוכחית</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim">insights</span>
+</div>
+<div class="font-heebo text-2xl font-bold text-primary">₪ 124,500.00</div>
+<div class="w-full bg-outline-variant h-1 rounded-full overflow-hidden">
+<div class="bg-gradient-to-l from-primary to-tertiary-fixed-dim h-full w-[65%]"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant">נשאר 35% מהתקציב החודשי המוגדר</p>
+</div>
+</div>
+<!-- Form Card -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest p-8 rounded-2xl shadow-[0_12px_32px_-4px_rgba(3,22,49,0.08)]">
+<form class="space-y-8">
+<!-- Type Toggle -->
+<div class="flex justify-center mb-10">
+<div class="bg-surface-container p-1 rounded-xl flex w-full max-w-sm">
+<label class="flex-1 cursor-pointer">
+<input checked="" class="hidden peer" name="type" type="radio"/>
+<div class="text-center py-2.5 rounded-lg text-sm font-bold transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant">הוצאה</div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input class="hidden peer" name="type" type="radio"/>
+<div class="text-center py-2.5 rounded-lg text-sm font-bold transition-all peer-checked:bg-tertiary-fixed-dim peer-checked:text-tertiary peer-checked:shadow-sm text-on-surface-variant">הכנסה</div>
+</label>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+<!-- Title Field -->
+<div class="flex flex-col gap-2">
+<label class="text-[11px] font-bold text-on-secondary-fixed-variant uppercase tracking-wider mr-1">כותרת</label>
+<input class="bg-surface-container-high border-transparent rounded-xl px-4 py-3.5 text-sm transition-all focus:ring-0 focus:shadow-inner text-primary placeholder:text-outline" placeholder="לדוגמה: קניות בסופר" type="text"/>
+</div>
+<!-- Amount Field -->
+<div class="flex flex-col gap-2">
+<label class="text-[11px] font-bold text-on-secondary-fixed-variant uppercase tracking-wider mr-1">סכום</label>
+<div class="relative">
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold text-sm">₪</span>
+<input class="w-full bg-surface-container-high border-transparent rounded-xl pr-10 pl-4 py-3.5 text-sm transition-all focus:ring-0 focus:shadow-inner text-primary placeholder:text-outline font-mono" placeholder="0.00" type="number"/>
+</div>
+</div>
+<!-- Category Field -->
+<div class="flex flex-col gap-2">
+<label class="text-[11px] font-bold text-on-secondary-fixed-variant uppercase tracking-wider mr-1">קטגוריה</label>
+<div class="relative">
+<select class="w-full bg-surface-container-high border-transparent rounded-xl px-4 py-3.5 text-sm transition-all focus:ring-0 appearance-none text-primary">
+<option>בחר קטגוריה</option>
+<option>פנאי ובילוים</option>
+<option>מזון וצריכה</option>
+<option>דיור ואחזקה</option>
+<option>תחבורה</option>
+<option>אחר</option>
+</select>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Date Field -->
+<div class="flex flex-col gap-2">
+<label class="text-[11px] font-bold text-on-secondary-fixed-variant uppercase tracking-wider mr-1">תאריך</label>
+<input class="bg-surface-container-high border-transparent rounded-xl px-4 py-3.5 text-sm transition-all focus:ring-0 text-primary" type="date"/>
+</div>
+<!-- Installments -->
+<div class="flex flex-col gap-2">
+<label class="text-[11px] font-bold text-on-secondary-fixed-variant uppercase tracking-wider mr-1">תשלומים</label>
+<div class="flex items-center gap-3">
+<input class="w-20 bg-surface-container-high border-transparent rounded-xl px-4 py-3.5 text-sm transition-all focus:ring-0 text-primary text-center" min="1" type="number" value="1"/>
+<span class="text-xs text-on-surface-variant">תשלום יחיד כברירת מחדל</span>
+</div>
+</div>
+<!-- Recurring Toggle -->
+<div class="flex flex-col justify-end">
+<label class="flex items-center gap-3 cursor-pointer p-3.5 bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
+<div class="relative inline-flex items-center">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full rtl:peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</div>
+<span class="text-sm font-medium text-primary">הגדרה כהוראת קבע</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant" title="התנועה תחזור על עצמה מדי חודש">info</span>
+</label>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-6 border-t border-slate-100 flex items-center justify-between">
+<button class="px-6 py-3 text-sm font-bold text-secondary hover:bg-surface-container-high transition-colors rounded-xl" type="button">ביטול</button>
+<button class="signature-gradient px-12 py-3.5 rounded-xl text-white font-bold text-sm shadow-[0_8px_20px_-4px_rgba(3,22,49,0.3)] hover:brightness-110 active:scale-95 transition-all" type="submit">
+                            שמור תנועה
+                        </button>
+</div>
+</form>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Hidden as per requirement for Details/Form screens) -->
+<!-- The prompt mandates FAB suppression on Details and Transactional screens -->
+<!-- Ambient Decoration for High-End feel -->
+<div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] -z-10"></div>
+<div class="fixed bottom-[-10%] right-[-5%] w-[30%] h-[30%] bg-tertiary-fixed-dim/10 rounded-full blur-[100px] -z-10"></div>
+</body></html>

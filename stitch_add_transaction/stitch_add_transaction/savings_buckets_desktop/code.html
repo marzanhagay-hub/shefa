@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="he"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&amp;family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#e7e8e9",
+                        "secondary-fixed-dim": "#bcc7dd",
+                        "primary-container": "#1a2b47",
+                        "on-primary-container": "#8293b4",
+                        "tertiary": "#001b15",
+                        "on-error": "#ffffff",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed": "#081b37",
+                        "inverse-surface": "#2e3132",
+                        "primary": "#031631",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "tertiary-fixed-dim": "#a6cfc3",
+                        "secondary-container": "#d5e0f7",
+                        "surface-bright": "#f8f9fa",
+                        "primary-fixed": "#d6e3ff",
+                        "secondary-fixed": "#d8e3fa",
+                        "on-tertiary-fixed": "#00201a",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#c1ebdf",
+                        "on-surface": "#191c1d",
+                        "on-surface-variant": "#44474d",
+                        "tertiary-container": "#063129",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#b6c7ea",
+                        "inverse-primary": "#b6c7ea",
+                        "surface-container": "#edeeef",
+                        "on-primary-fixed-variant": "#374765",
+                        "surface": "#f8f9fa",
+                        "on-secondary-container": "#586377",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f3f4f5",
+                        "secondary": "#545f72",
+                        "outline-variant": "#c5c6ce",
+                        "outline": "#75777e",
+                        "on-tertiary-fixed-variant": "#274e45",
+                        "surface-tint": "#4e5f7d",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-secondary-fixed": "#111c2c",
+                        "surface-dim": "#d9dadb",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#729a8f",
+                        "on-background": "#191c1d"
+                    },
+                    fontFamily: {
+                        "heebo": ["Heebo", "sans-serif"],
+                        "headline": ["Manrope", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .signature-gradient {
+            background: linear-gradient(135deg, #031631 0%, #1a2b47 100%);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed overflow-x-hidden">
+<!-- SideNavBar Shell -->
+<aside class="fixed top-0 right-0 h-full w-64 z-40 bg-slate-50 border-l border-slate-200/15 flex flex-col p-6 font-heebo text-right tracking-tight shadow-[-12px_0_32px_-4px_rgba(3,22,49,0.08)]">
+<div class="text-xl font-bold text-[#031631] mb-8">
+            חשבון השפע של חגי
+            <span class="block text-xs font-normal text-on-surface-variant/60 tracking-normal mt-1">The Digital Private Banker</span>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:bg-slate-100 transition-all duration-300 rounded-xl group" href="#">
+<span class="material-symbols-outlined transition-transform group-active:scale-95" data-icon="home">home</span>
+<span class="text-md">בית</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:bg-slate-100 transition-all duration-300 rounded-xl group" href="#">
+<span class="material-symbols-outlined transition-transform group-active:scale-95" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="text-md">תזריים</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-[#031631] font-bold bg-white/80 backdrop-blur-md rounded-xl shadow-sm group" href="#">
+<span class="material-symbols-outlined transition-transform group-active:scale-95" data-icon="inventory_2">inventory_2</span>
+<span class="text-md">קופות</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-slate-500 hover:bg-slate-100 transition-all duration-300 rounded-xl group" href="#">
+<span class="material-symbols-outlined transition-transform group-active:scale-95" data-icon="settings">settings</span>
+<span class="text-md">הגדרות</span>
+</a>
+</nav>
+<button class="mt-auto w-full signature-gradient text-white p-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+            הוספת תנועה
+        </button>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 left-0 right-64 h-16 z-30 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 w-full font-heebo text-right">
+<div class="text-lg font-medium text-[#1A2B47]">קופות השפע</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-100/50 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-100/50 rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="mr-64 pt-24 pb-12 px-12">
+<!-- Header Section with Asymmetry -->
+<header class="mb-16 max-w-5xl">
+<h1 class="font-heebo text-5xl font-extrabold tracking-tight text-primary mb-4 leading-tight">
+                הון לעתיד, <br/>
+<span class="text-on-primary-container">בנייה שקטה של שפע.</span>
+</h1>
+<p class="text-on-surface-variant text-lg max-w-xl leading-relaxed">
+                ניהול היעדים הפיננסיים שלך דורש בהירות. כאן תוכל לעקוב אחר הצמיחה של כל קופה ולתכנן את הצעד הבא לעבר חופש כלכלי.
+            </p>
+</header>
+<!-- Bento Grid of Bucket Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Create New Bucket (Bento Item) -->
+<div class="group relative flex flex-col justify-center items-center p-8 rounded-3xl border-2 border-dashed border-outline-variant/30 hover:border-primary/20 transition-all cursor-pointer bg-surface-container-low/30 min-h-[320px]">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="add">add</span>
+</div>
+<h3 class="font-heebo text-xl font-bold text-primary">פתיחת קופה חדשה</h3>
+<p class="text-sm text-on-surface-variant mt-2 text-center">הגדר יעד חיסכון חדש והתחל לצבור</p>
+</div>
+<!-- Bucket Card 1: Emergency Fund -->
+<div class="glass-card p-8 rounded-3xl shadow-[0_12px_32px_-4px_rgba(3,22,49,0.06)] border border-white/50 flex flex-col">
+<div class="flex justify-between items-start mb-8">
+<div class="w-12 h-12 rounded-2xl bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-fixed" data-icon="security">security</span>
+</div>
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant/40">קרן חירום</span>
+</div>
+<h3 class="font-heebo text-2xl font-bold text-primary mb-1">ביטחון שוטף</h3>
+<div class="flex items-baseline gap-1 mb-8">
+<span class="text-3xl font-extrabold text-primary">₪45,000</span>
+<span class="text-sm text-on-surface-variant">מתוך ₪60,000</span>
+</div>
+<!-- Pulse Progress Bar -->
+<div class="mt-auto">
+<div class="flex justify-between items-end mb-3">
+<span class="text-sm font-semibold text-primary">75% הושלמו</span>
+<span class="text-xs text-on-surface-variant">₪15,000 נותרו</span>
+</div>
+<div class="h-2.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full signature-gradient rounded-full" style="width: 75%;"></div>
+</div>
+</div>
+</div>
+<!-- Bucket Card 2: Luxury Travel -->
+<div class="glass-card p-8 rounded-3xl shadow-[0_12px_32px_-4px_rgba(3,22,49,0.06)] border border-white/50 flex flex-col">
+<div class="flex justify-between items-start mb-8">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed" data-icon="flight_takeoff">flight_takeoff</span>
+</div>
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant/40">חופשות ופנאי</span>
+</div>
+<h3 class="font-heebo text-2xl font-bold text-primary mb-1">טיול ליפן</h3>
+<div class="flex items-baseline gap-1 mb-8">
+<span class="text-3xl font-extrabold text-primary">₪22,400</span>
+<span class="text-sm text-on-surface-variant">מתוך ₪30,000</span>
+</div>
+<div class="mt-auto">
+<div class="flex justify-between items-end mb-3">
+<span class="text-sm font-semibold text-on-tertiary-container">74% הושלמו</span>
+</div>
+<div class="h-2.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-l from-on-tertiary-container to-tertiary-fixed-dim rounded-full" style="width: 74%;"></div>
+</div>
+</div>
+</div>
+<!-- Bucket Card 3: Real Estate (Large Span Potential) -->
+<div class="glass-card p-8 rounded-3xl shadow-[0_12px_32px_-4px_rgba(3,22,49,0.06)] border border-white/50 flex flex-col md:col-span-2 lg:col-span-1">
+<div class="flex justify-between items-start mb-8">
+<div class="w-12 h-12 rounded-2xl bg-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-fixed" data-icon="home_work">home_work</span>
+</div>
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant/40">נדל"ן</span>
+</div>
+<h3 class="font-heebo text-2xl font-bold text-primary mb-1">דירה להשקעה</h3>
+<div class="flex items-baseline gap-1 mb-8">
+<span class="text-3xl font-extrabold text-primary">₪340,000</span>
+<span class="text-sm text-on-surface-variant">מתוך ₪850,000</span>
+</div>
+<div class="mt-auto">
+<div class="flex justify-between items-end mb-3">
+<span class="text-sm font-semibold text-primary">40% הושלמו</span>
+<span class="text-xs text-on-surface-variant">מנוהל בתיק השקעות</span>
+</div>
+<div class="h-2.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 40%;"></div>
+</div>
+</div>
+</div>
+<!-- Bucket Card 4: Vehicle Replacement -->
+<div class="glass-card p-8 rounded-3xl shadow-[0_12px_32px_-4px_rgba(3,22,49,0.06)] border border-white/50 flex flex-col">
+<div class="flex justify-between items-start mb-8">
+<div class="w-12 h-12 rounded-2xl bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="electric_car">electric_car</span>
+</div>
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant/40">רכב</span>
+</div>
+<h3 class="font-heebo text-2xl font-bold text-primary mb-1">רכב חדש</h3>
+<div class="flex items-baseline gap-1 mb-8">
+<span class="text-3xl font-extrabold text-primary">₪112,000</span>
+<span class="text-sm text-on-surface-variant">מתוך ₪120,000</span>
+</div>
+<div class="mt-auto">
+<div class="flex justify-between items-end mb-3">
+<span class="text-sm font-semibold text-tertiary-fixed-dim">93% הושלמו</span>
+<span class="text-xs text-on-tertiary-fixed-variant">כמעט שם!</span>
+</div>
+<div class="h-2.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full" style="width: 93%;"></div>
+</div>
+</div>
+</div>
+<!-- Bucket Card 5: Passive Income -->
+<div class="glass-card p-8 rounded-3xl shadow-[0_12px_32px_-4px_rgba(3,22,49,0.06)] border border-white/50 flex flex-col">
+<div class="flex justify-between items-start mb-8">
+<div class="w-12 h-12 rounded-2xl bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="show_chart">show_chart</span>
+</div>
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant/40">הכנסה פסיבית</span>
+</div>
+<h3 class="font-heebo text-2xl font-bold text-primary mb-1">תיק דיבידנדים</h3>
+<div class="flex items-baseline gap-1 mb-8">
+<span class="text-3xl font-extrabold text-primary">₪18,500</span>
+<span class="text-sm text-on-surface-variant">מתוך ₪100,000</span>
+</div>
+<div class="mt-auto">
+<div class="flex justify-between items-end mb-3">
+<span class="text-sm font-semibold text-primary">18% הושלמו</span>
+</div>
+<div class="h-2.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 18%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Insights Section: Editorial Style -->
+<section class="mt-20 grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+<div class="lg:col-span-1">
+<h2 class="font-heebo text-3xl font-bold text-primary mb-6 underline decoration-tertiary-fixed decoration-4 underline-offset-8">תובנות הצמיחה שלך</h2>
+<p class="text-on-surface-variant leading-relaxed">
+                    בחודש האחרון, קצב הצבירה שלך עלה ב-12% הודות לצמצום הוצאות המנויים שלך. 
+                    במצב הנוכחי, תגיע ליעד הדירה תוך 4 שנים ו-3 חודשים.
+                </p>
+<div class="mt-8 flex gap-4">
+<div class="p-4 bg-surface-container-lowest rounded-2xl flex-1 shadow-sm">
+<div class="text-tertiary-fixed-dim font-bold text-xl">+₪3,200</div>
+<div class="text-xs text-on-surface-variant uppercase tracking-tighter">חיסכון ממוצע חודשי</div>
+</div>
+<div class="p-4 bg-surface-container-lowest rounded-2xl flex-1 shadow-sm">
+<div class="text-primary font-bold text-xl">₪557,900</div>
+<div class="text-xs text-on-surface-variant uppercase tracking-tighter">סה"כ נכסים בקופות</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-2 relative h-80 rounded-3xl overflow-hidden shadow-2xl">
+<img alt="Financial Workspace" class="w-full h-full object-cover" data-alt="Modern high-end home office with marble desk and gold accessories, minimalist aesthetic with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyIwtB_H49QChX0UwcM3oZzgTEpacAneTIguwKMtJuWI6H96yPdQItKDBEt4kZetlN9aODsT9KFJYb331VKCJX6RtZPusF1PllWC5AXyYKYHRqdGoHZDayYEZ1x4mdb2OI5PT-8GBNJQ9H5nAaiVoV9nm55wd-Gca4jobb27kXu87IlGuGFsVEYHy26oQKfUTvZPCl0AfRAFJdyGZAsC86kp9XSnmUSXF5lQ5FBY7gerXzqJue0h_tM3Adr9RB32C3vywvforhyLs"/>
+<div class="absolute inset-0 bg-gradient-to-r from-primary/60 to-transparent flex items-center p-12">
+<div class="text-white max-w-sm">
+<h4 class="font-heebo text-2xl font-bold mb-2">זמן השקעה עובד בשבילך</h4>
+<p class="text-sm opacity-80">מנוף הריבית דריבית מתחיל להראות תוצאות משמעותיות בתיק הנדל"ן שלך.</p>
+<button class="mt-6 px-6 py-2 bg-white text-primary rounded-full font-bold text-sm hover:bg-opacity-90 transition-all">לניתוח המלא</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Visual Polish: Floating Ornament -->
+<div class="fixed -bottom-24 -left-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="fixed -top-24 -left-24 w-96 h-96 bg-tertiary-fixed/10 rounded-full blur-3xl pointer-events-none"></div>
+</body></html>

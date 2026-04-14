@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="he"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface-variant": "#44474d",
+              "outline": "#75777e",
+              "primary-fixed": "#d6e3ff",
+              "on-secondary-fixed-variant": "#3c475a",
+              "secondary-fixed-dim": "#bcc7dd",
+              "primary-container": "#1a2b47",
+              "secondary-container": "#d5e0f7",
+              "primary-fixed-dim": "#b6c7ea",
+              "tertiary-fixed": "#c1ebdf",
+              "surface-container-high": "#e7e8e9",
+              "on-tertiary-container": "#729a8f",
+              "primary": "#031631",
+              "outline-variant": "#c5c6ce",
+              "on-primary": "#ffffff",
+              "secondary-fixed": "#d8e3fa",
+              "error-container": "#ffdad6",
+              "on-surface": "#191c1d",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-tertiary-fixed-variant": "#274e45",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#111c2c",
+              "on-error": "#ffffff",
+              "error": "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "secondary": "#545f72",
+              "surface-dim": "#d9dadb",
+              "tertiary": "#001b15",
+              "on-primary-container": "#8293b4",
+              "background": "#f8f9fa",
+              "inverse-primary": "#b6c7ea",
+              "on-primary-fixed-variant": "#374765",
+              "surface-container": "#edeeef",
+              "surface-tint": "#4e5f7d",
+              "surface": "#f8f9fa",
+              "on-tertiary-fixed": "#00201a",
+              "on-background": "#191c1d",
+              "on-secondary-container": "#586377",
+              "tertiary-container": "#063129",
+              "surface-container-highest": "#e1e3e4",
+              "inverse-on-surface": "#f0f1f2",
+              "surface-bright": "#f8f9fa",
+              "tertiary-fixed-dim": "#a6cfc3",
+              "on-primary-fixed": "#081b37",
+              "surface-container-low": "#f3f4f5",
+              "inverse-surface": "#2e3132",
+              "surface-variant": "#e1e3e4"
+            },
+            fontFamily: {
+              "heebo": ["Heebo", "sans-serif"],
+              "headline": ["Heebo", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .glow-primary {
+        box-shadow: 0 0 40px -10px rgba(3, 22, 49, 0.25);
+      }
+      body {
+        background-color: #f8f9fa;
+        font-family: 'Inter', 'Heebo', sans-serif;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased pb-32">
+<!-- TopAppBar -->
+<header class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl text-slate-900 dark:text-slate-50 docked full-width top-0 z-50 border-b border-slate-200/15 dark:border-slate-800/15 shadow-sm sticky">
+<div class="flex flex-row-reverse justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-2xl cursor-pointer hover:opacity-80 transition-opacity active:scale-95 transition-transform" data-icon="menu">menu</span>
+</div>
+<h1 class="font-heebo font-bold text-lg tracking-tight text-right">חשבון השפע שלך</h1>
+<div class="h-10 w-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant/10 cursor-pointer hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a professional man with a kind expression in a bright modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLn4-yW9hbtONPWkJc8BXTrywRv7xlj-8D65FnKrfa1EIqVwCkK4v4T4eTfR9DzyhPXTL2LOQGr3Q2t4B0rOL0yt7u2RHYOw9SmZsTNO07aEfc3EGVwQ7o21XDZN7GaOrxXN8lHWHJ7vMWd94tkrxk0Fq05Jr29ZkE8m0UjqQ_PtbHQwnZt7FyjHlHu1b5ZRxfJRaIgWHTqGWcF8gqqArkYnxRxMuviDzlhYD9bSJH5SIkF0nWa-WPz5fKCikeE1Q6xmz4u9PUNtU"/>
+</div>
+</div>
+</header>
+<main class="max-w-5xl mx-auto px-6 pt-8 space-y-8">
+<!-- Welcome Greeting -->
+<section class="space-y-1">
+<p class="text-on-surface-variant font-body text-sm tracking-wide">שלום חגי, בוקר טוב</p>
+<h2 class="text-3xl font-black font-heebo text-primary tracking-tight">סקירת העושר שלך</h2>
+</section>
+<!-- Status Cards: Bento Layout -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Bank Balance: Subtle Gray -->
+<div class="bg-surface-container-low rounded-3xl p-8 space-y-6 flex flex-col justify-between group transition-all duration-300 hover:bg-surface-container">
+<div class="flex justify-between items-start">
+<div class="p-3 bg-surface-container-lowest rounded-2xl">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="account_balance">account_balance</span>
+</div>
+<span class="text-xs font-bold font-heebo text-outline uppercase tracking-widest">מעודכן להיום</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-heebo font-medium mb-1">יתרת בנק</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black font-heebo text-primary">₪15,240</span>
+</div>
+</div>
+</div>
+<!-- Real Available Balance: Highlighted Deep Blue -->
+<div class="bg-primary rounded-3xl p-8 space-y-6 flex flex-col justify-between text-on-primary glow-primary relative overflow-hidden transition-all duration-300 hover:scale-[1.02]">
+<!-- Subtle decorative background element -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+<div class="flex justify-between items-start relative z-10">
+<div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md">
+<span class="material-symbols-outlined text-on-primary text-2xl" data-icon="shield_with_heart" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+</div>
+<div class="flex items-center gap-1 px-3 py-1 bg-tertiary-fixed-dim/20 rounded-full">
+<span class="w-2 h-2 bg-tertiary-fixed-dim rounded-full animate-pulse"></span>
+<span class="text-[10px] font-bold font-heebo text-tertiary-fixed">שקט נפשי</span>
+</div>
+</div>
+<div class="relative z-10">
+<p class="text-on-primary-container font-heebo font-medium mb-1">יתרה ריאלית פנויה</p>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black font-heebo">₪6,892</span>
+</div>
+<p class="text-xs text-on-primary-container mt-2 font-body opacity-80">לאחר ניכוי התחייבויות קרובות</p>
+</div>
+</div>
+</section>
+<!-- Cashflow Forecast Chart Section -->
+<section class="bg-surface-container-lowest rounded-3xl p-8 space-y-8">
+<div class="flex flex-col md:flex-row-reverse justify-between items-start md:items-center gap-4">
+<div class="space-y-1">
+<h3 class="text-xl font-bold font-heebo text-primary">חיזוי תזרים מזומנים</h3>
+<p class="text-sm text-on-surface-variant font-body">תחזית פיננסית מבוססת בינה מלאכותית</p>
+</div>
+<!-- Time Range Controls -->
+<div class="flex bg-surface-container rounded-xl p-1">
+<button class="px-5 py-2 text-sm font-bold font-heebo rounded-lg bg-surface-container-lowest text-primary shadow-sm">חודש</button>
+<button class="px-5 py-2 text-sm font-medium font-heebo rounded-lg text-secondary hover:text-primary transition-colors">3 חודשים</button>
+<button class="px-5 py-2 text-sm font-medium font-heebo rounded-lg text-secondary hover:text-primary transition-colors">שנה</button>
+</div>
+</div>
+<!-- Custom Column Chart Visualization -->
+<div class="relative h-64 w-full flex items-end justify-between px-2 pt-8">
+<!-- Grid Lines (Horizontal) -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-5">
+<div class="border-t border-primary w-full"></div>
+<div class="border-t border-primary w-full"></div>
+<div class="border-t border-primary w-full"></div>
+<div class="border-t border-primary w-full"></div>
+</div>
+<!-- Chart Columns -->
+<div class="flex flex-col items-center gap-3 w-1/6">
+<div class="w-full bg-outline-variant/30 rounded-t-xl h-32 relative group">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-xl transition-all duration-500 h-[60%] group-hover:h-[65%]"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-white text-[10px] px-2 py-1 rounded-md">₪8.2K</div>
+</div>
+<span class="text-[11px] font-bold text-secondary font-heebo">ינואר</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-1/6">
+<div class="w-full bg-outline-variant/30 rounded-t-xl h-32 relative group">
+<div class="absolute bottom-0 w-full bg-tertiary-fixed-dim rounded-t-xl transition-all duration-500 h-[85%] group-hover:h-[90%]"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-white text-[10px] px-2 py-1 rounded-md">₪12.4K</div>
+</div>
+<span class="text-[11px] font-bold text-secondary font-heebo">פברואר</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-1/6">
+<div class="w-full bg-outline-variant/30 rounded-t-xl h-32 relative group">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-xl transition-all duration-500 h-[45%] group-hover:h-[50%]"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-white text-[10px] px-2 py-1 rounded-md">₪5.1K</div>
+</div>
+<span class="text-[11px] font-bold text-secondary font-heebo">מרץ</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-1/6">
+<div class="w-full bg-outline-variant/30 rounded-t-xl h-32 relative group">
+<div class="absolute bottom-0 w-full bg-tertiary-fixed-dim rounded-t-xl transition-all duration-500 h-[95%] group-hover:h-[100%]"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-white text-[10px] px-2 py-1 rounded-md">₪14.8K</div>
+</div>
+<span class="text-[11px] font-bold text-secondary font-heebo">אפריל</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-1/6">
+<div class="w-full bg-outline-variant/30 rounded-t-xl h-32 relative group">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-xl transition-all duration-500 h-[70%] group-hover:h-[75%]"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-white text-[10px] px-2 py-1 rounded-md">₪9.5K</div>
+</div>
+<span class="text-[11px] font-bold text-secondary font-heebo">מאי</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-1/6">
+<div class="w-full bg-outline-variant/30 rounded-t-xl h-32 relative group">
+<div class="absolute bottom-0 w-full bg-tertiary-fixed-dim rounded-t-xl transition-all duration-500 h-[80%] group-hover:h-[85%]"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-white text-[10px] px-2 py-1 rounded-md">₪11.2K</div>
+</div>
+<span class="text-[11px] font-bold text-secondary font-heebo">יוני</span>
+</div>
+</div>
+</section>
+<!-- Insights Bento Grid Extra -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2 bg-surface-container-high rounded-3xl p-6 flex items-center justify-between border border-outline-variant/10">
+<div class="flex gap-4 items-center">
+<div class="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="lightbulb">lightbulb</span>
+</div>
+<div>
+<h4 class="font-bold font-heebo text-primary">תובנה חכמה</h4>
+<p class="text-sm text-secondary font-body">שים לב: חריגה קלה בהוצאות מזון החודש</p>
+</div>
+</div>
+<button class="p-2 hover:bg-white/50 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+</div>
+<div class="bg-tertiary-fixed rounded-3xl p-6 flex flex-col justify-center border border-on-tertiary-container/5">
+<span class="text-[10px] font-black font-heebo text-on-tertiary-fixed-variant tracking-widest uppercase mb-1">יעד חיסכון</span>
+<p class="text-xl font-black font-heebo text-on-tertiary-fixed">חופשה ביוון</p>
+<div class="mt-4 h-1.5 w-full bg-on-tertiary-fixed/10 rounded-full overflow-hidden">
+<div class="h-full bg-on-tertiary-fixed-variant rounded-full" style="width: 65%;"></div>
+</div>
+</div>
+</section>
+</main>
+<!-- QuickActionFAB -->
+<button class="fixed bottom-28 start-6 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center z-[60] active:scale-90 transition-all duration-200 hover:brightness-110">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex flex-row-reverse justify-around items-center px-4 pb-6 pt-3 bg-white/90 dark:bg-slate-950/90 backdrop-blur-2xl z-50 rounded-t-3xl border-t border-slate-100 dark:border-slate-800/50 shadow-[0_-12px_32px_-4px_rgba(3,22,49,0.08)]">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-50 rounded-2xl px-4 py-2 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-heebo text-[11px] font-medium leading-none mt-1">בית</span>
+</a>
+<!-- Cashflow -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-4 py-2 active:scale-90 transition-all duration-200 hover:text-slate-600" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-heebo text-[11px] font-medium leading-none mt-1">תזרים</span>
+</a>
+<!-- Funds -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-4 py-2 active:scale-90 transition-all duration-200 hover:text-slate-600" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="savings">savings</span>
+<span class="font-heebo text-[11px] font-medium leading-none mt-1">קופות</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-4 py-2 active:scale-90 transition-all duration-200 hover:text-slate-600" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
+<span class="font-heebo text-[11px] font-medium leading-none mt-1">הגדרות</span>
+</a>
+</nav>
+</body></html>
