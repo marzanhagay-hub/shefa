@@ -32,8 +32,18 @@ create table if not exists buckets (
   icon text,
   current_amount numeric default 0,
   target_amount numeric default 0,
+  fund_name text,
+  fund_number text,
+  deposit_date text,
+  bucket_txs jsonb default '[]',
   created_at timestamptz default now()
 );
+
+-- עמודות חדשות לטבלה קיימת
+alter table buckets add column if not exists fund_name text;
+alter table buckets add column if not exists fund_number text;
+alter table buckets add column if not exists deposit_date text;
+alter table buckets add column if not exists bucket_txs jsonb default '[]';
 
 create table if not exists config (
   id integer primary key default 1,
