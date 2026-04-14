@@ -1,4 +1,4 @@
-const CACHE_NAME = 'shefa-v1';
+const CACHE_NAME = 'shefa-v2';
 const ASSETS = [
   '/',
   '/index.html',

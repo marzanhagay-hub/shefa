@@ -9,6 +9,7 @@
 <link rel="manifest" href="manifest.json"/>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=Inter:wght@400;500;600&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 <script>
 tailwind.config = {
@@ -436,14 +437,27 @@ input[type=number]{-moz-appearance:textfield}
         <input id="tx-date" type="date" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 font-heebo text-sm focus:ring-1 focus:ring-surface-tint/20"/>
       </div>
 
-      <!-- Recurring toggle -->
-      <div class="flex items-center justify-between py-2">
-        <div>
-          <span class="text-sm font-heebo font-bold text-primary">הוראת קבע</span>
-          <span class="block text-xs text-on-surface-variant">חזור על פעולה זו</span>
-        </div>
-        <button type="button" id="recurring-toggle" onclick="toggleRecurring()" class="w-12 h-6 rounded-full bg-outline-variant relative transition-colors">
-          <div id="recurring-thumb" class="absolute top-1 right-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all"></div>
+      <!-- Mode selector: הוראת קבע / תשלומים -->
+      <div id="tx-mode-grid" class="grid grid-cols-1 gap-3">
+        <button type="button" id="mode-btn-recurring" onclick="selectTxMode('recurring')"
+          class="flex items-center gap-3 p-4 rounded-2xl border-2 border-outline-variant/30 bg-surface-container-low text-right transition-all active:scale-95">
+          <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-primary">repeat</span>
+          </div>
+          <div class="flex-1">
+            <span class="text-sm font-bold font-heebo text-primary block">הוראת קבע</span>
+            <span class="text-xs text-on-surface-variant">חזור על פעולה זו</span>
+          </div>
+        </button>
+        <button type="button" id="mode-btn-installments" onclick="selectTxMode('installments')"
+          class="hidden flex items-center gap-3 p-4 rounded-2xl border-2 border-outline-variant/30 bg-surface-container-low text-right transition-all active:scale-95">
+          <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-primary">payments</span>
+          </div>
+          <div class="flex-1">
+            <span class="text-sm font-bold font-heebo text-primary block">תשלומים</span>
+            <span class="text-xs text-on-surface-variant">פרישה לתשלומים</span>
+          </div>
         </button>
       </div>
 
@@ -466,15 +480,9 @@ input[type=number]{-moz-appearance:textfield}
         </div>
       </div>
 
-      <!-- Installments (expense only) -->
-      <div id="installments-section" class="hidden space-y-3 p-4 bg-surface-container-low rounded-2xl">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-heebo font-bold text-primary">תשלומים</span>
-          <button type="button" id="install-toggle" onclick="toggleInstallments()" class="w-12 h-6 rounded-full bg-outline-variant relative transition-colors">
-            <div id="install-thumb" class="absolute top-1 right-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all"></div>
-          </button>
-        </div>
-        <div id="install-fields" class="hidden grid grid-cols-2 gap-3">
+      <!-- Installments fields -->
+      <div id="install-fields" class="hidden space-y-3 p-4 bg-surface-container-low rounded-2xl">
+        <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
             <label class="text-xs font-bold font-heebo text-on-surface-variant">מספר תשלומים</label>
             <input id="tx-installments" type="number" inputmode="numeric" min="2" value="3" placeholder="3" class="w-full bg-surface-container-highest border-none rounded-xl py-3 px-4 font-heebo text-sm" dir="ltr" oninput="updateInstallmentPreview()"/>
@@ -643,22 +651,67 @@ input[type=number]{-moz-appearance:textfield}
 
 <script>
 // ══════════════════════════════════════════
-// STORAGE
+// SUPABASE + STORAGE
 // ══════════════════════════════════════════
-const SK = { tx:'shefa_tx', buckets:'shefa_buckets', config:'shefa_config', loans:'shefa_loans', categories:'shefa_cats' };
+const SUPA_URL = 'https://gzljbjjitfpcfoysxnwb.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6bGpiamppdGZwY2ZveXN4bndiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNzQ5NjMsImV4cCI6MjA5MTc1MDk2M30.p09bg0y1f-J0G9qNQ0CyKA3YMp_PPtPN096EAHwZTfk';
+const supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
 const def_cfg = { bankBalance:0, profitRate:10, pinCode:'', currency:'ILS' };
 const def_cats = ['מזון','פנאי','מגורים','תחבורה','בריאות','חינוך','משכורת','עסקים','חיסכון','אחר'];
 
-function getConfig(){ try{ return {...def_cfg,...JSON.parse(localStorage.getItem(SK.config)||'{}')} }catch{return{...def_cfg}} }
-function saveConfig(c){ localStorage.setItem(SK.config,JSON.stringify(c)) }
-function getTx(){ try{ return JSON.parse(localStorage.getItem(SK.tx)||'[]') }catch{return[]} }
-function saveTxs(t){ localStorage.setItem(SK.tx,JSON.stringify(t)) }
-function getBuckets(){ try{ return JSON.parse(localStorage.getItem(SK.buckets)||'[]') }catch{return[]} }
-function saveBuckets(b){ localStorage.setItem(SK.buckets,JSON.stringify(b)) }
-function getLoans(){ try{ return JSON.parse(localStorage.getItem(SK.loans)||'[]') }catch{return[]} }
-function saveLoans(l){ localStorage.setItem(SK.loans,JSON.stringify(l)) }
-function getCategories(){ try{ return JSON.parse(localStorage.getItem(SK.categories)||JSON.stringify(def_cats)) }catch{return def_cats} }
-function saveCategories(c){ localStorage.setItem(SK.categories,JSON.stringify(c)) }
+// In-memory cache
+let _db = {
+  config: {...def_cfg},
+  transactions: [],
+  loans: [],
+  buckets: [],
+  categories: [...def_cats]
+};
+
+async function loadFromSupabase(){
+  const [cfgRes, txRes, loanRes, bucketRes] = await Promise.all([
+    supa.from('config').select('*').eq('id',1).maybeSingle(),
+    supa.from('transactions').select('*').order('created_at',{ascending:true}),
+    supa.from('loans').select('*').order('created_at',{ascending:true}),
+    supa.from('buckets').select('*').order('created_at',{ascending:true})
+  ]);
+  if(cfgRes.data){
+    _db.config = { bankBalance:cfgRes.data.bank_balance||0, profitRate:cfgRes.data.profit_rate||10, pinCode:cfgRes.data.pin_code||'', currency:cfgRes.data.currency||'ILS' };
+    _db.categories = cfgRes.data.categories || [...def_cats];
+  }
+  if(txRes.data) _db.transactions = txRes.data.map(r=>({ id:r.id, title:r.title, amount:parseFloat(r.amount), type:r.type, category:r.category, date:r.date, isRecurring:r.is_recurring, frequency:r.frequency, endDate:r.end_date, installments:r.installments }));
+  if(loanRes.data) _db.loans = loanRes.data.map(r=>({ id:r.id, purpose:r.purpose, isLeverage:r.is_leverage, disbursementDate:r.disbursement_date, finalRepaymentDate:r.final_repayment_date, interestRate:parseFloat(r.interest_rate)||0, indexationType:r.indexation_type, principalAmount:parseFloat(r.principal_amount) }));
+  if(bucketRes.data) _db.buckets = bucketRes.data.map(r=>({ id:r.id, name:r.name, icon:r.icon, currentAmount:parseFloat(r.current_amount)||0, targetAmount:parseFloat(r.target_amount)||0 }));
+}
+
+function _txToRow(t){ return { id:t.id, title:t.title, amount:t.amount, type:t.type, category:t.category, date:t.date, is_recurring:t.isRecurring||false, frequency:t.frequency||null, end_date:t.endDate||null, installments:t.installments||null }; }
+function _loanToRow(l){ return { id:l.id, purpose:l.purpose, is_leverage:l.isLeverage||false, disbursement_date:l.disbursementDate, final_repayment_date:l.finalRepaymentDate, interest_rate:l.interestRate||0, indexation_type:l.indexationType||'NONE', principal_amount:l.principalAmount }; }
+function _bucketToRow(b){ return { id:b.id, name:b.name, icon:b.icon||'savings', current_amount:b.currentAmount||0, target_amount:b.targetAmount||0 }; }
+
+function _syncDiff(table, oldArr, newArr, toRow){
+  const oldIds=new Set(oldArr.map(i=>i.id)), newIds=new Set(newArr.map(i=>i.id));
+  const deleted=[...oldIds].filter(id=>!newIds.has(id));
+  if(deleted.length) supa.from(table).delete().in('id',deleted).then(({error})=>{ if(error) console.error(table+' del:',error); });
+  const upserted=newArr.filter(item=>!oldIds.has(item.id)||JSON.stringify(oldArr.find(o=>o.id===item.id))!==JSON.stringify(item));
+  if(upserted.length) supa.from(table).upsert(upserted.map(toRow)).then(({error})=>{ if(error) console.error(table+' upsert:',error); });
+}
+
+function _syncConfig(c){
+  supa.from('config').upsert({ id:1, bank_balance:c.bankBalance, profit_rate:c.profitRate, pin_code:c.pinCode||'', currency:c.currency||'ILS', categories:_db.categories })
+    .then(({error})=>{ if(error) console.error('config:',error); });
+}
+
+function getConfig(){ return {..._db.config}; }
+function saveConfig(c){ _db.config={...c}; _syncConfig(c); }
+function getTx(){ return [..._db.transactions]; }
+function saveTxs(newTxs){ _syncDiff('transactions',_db.transactions,newTxs,_txToRow); _db.transactions=[...newTxs]; }
+function getBuckets(){ return [..._db.buckets]; }
+function saveBuckets(newBuckets){ _syncDiff('buckets',_db.buckets,newBuckets,_bucketToRow); _db.buckets=[...newBuckets]; }
+function getLoans(){ return [..._db.loans]; }
+function saveLoans(newLoans){ _syncDiff('loans',_db.loans,newLoans,_loanToRow); _db.loans=[...newLoans]; }
+function getCategories(){ return [..._db.categories]; }
+function saveCategories(cats){ _db.categories=[...cats]; _syncConfig(_db.config); }
 
 // ══════════════════════════════════════════
 // CORE ENGINE
@@ -1076,6 +1129,7 @@ function deleteTx(id){
 let txTypeState = 'income';
 let isRecurring = false;
 let isInstall = false;
+let txModeState = null;
 let selectedIcon = 'account_balance_wallet';
 let isLeverageState = false;
 
@@ -1112,7 +1166,7 @@ function closeTxModal(){
 }
 
 function resetTxForm(){
-  txTypeState='income'; isRecurring=false; isInstall=false;
+  txTypeState='income'; isRecurring=false; isInstall=false; txModeState=null;
   setTxType('income');
   document.getElementById('tx-amount').value='';
   document.getElementById('tx-title').value='';
@@ -1122,16 +1176,36 @@ function resetTxForm(){
   document.getElementById('tx-installments').value='3';
   document.getElementById('tx-interest').value='0';
   document.getElementById('recurring-options').classList.add('hidden');
-  document.getElementById('installments-section').classList.add('hidden');
   document.getElementById('install-fields').classList.add('hidden');
   document.getElementById('installment-preview').classList.add('hidden');
-  // Reset toggles
-  ['recurring-toggle','install-toggle'].forEach(id=>{
+  _resetModeCards();
+}
+
+function _resetModeCards(){
+  ['mode-btn-recurring','mode-btn-installments'].forEach(id=>{
     const el=document.getElementById(id);
-    el.classList.remove('bg-primary'); el.classList.add('bg-outline-variant');
+    if(!el) return;
+    el.classList.remove('border-primary','bg-primary/5');
+    el.classList.add('border-outline-variant/30','bg-surface-container-low');
   });
-  document.getElementById('recurring-thumb').style.cssText='top:.25rem;right:.25rem;left:auto';
-  document.getElementById('install-thumb').style.cssText='top:.25rem;right:.25rem;left:auto';
+}
+
+function selectTxMode(mode){
+  if(txModeState===mode){
+    txModeState=null; isRecurring=false; isInstall=false;
+  } else {
+    txModeState=mode; isRecurring=(mode==='recurring'); isInstall=(mode==='installments');
+  }
+  _resetModeCards();
+  if(txModeState){
+    const btn=document.getElementById('mode-btn-'+txModeState);
+    btn.classList.add('border-primary','bg-primary/5');
+    btn.classList.remove('border-outline-variant/30','bg-surface-container-low');
+  }
+  document.getElementById('recurring-options').classList.toggle('hidden', txModeState!=='recurring');
+  document.getElementById('install-fields').classList.toggle('hidden', txModeState!=='installments');
+  if(txModeState==='installments') updateInstallmentPreview();
+  else document.getElementById('installment-preview').classList.add('hidden');
 }
 
 function setTxType(type){
@@ -1141,26 +1215,21 @@ function setTxType(type){
   expBtn.className=`btn-type btn-expense flex-1 py-3 px-4 rounded-xl text-sm font-heebo transition-all flex items-center justify-center gap-2${type==='expense'?' active':''}`;
   if(type==='income'){ incBtn.classList.add('active'); expBtn.classList.remove('active'); }
   else { expBtn.classList.add('active'); incBtn.classList.remove('active'); }
-  // Show installments section only for expenses
-  document.getElementById('installments-section').classList.toggle('hidden', type!=='expense');
-}
-
-function toggleRecurring(){
-  isRecurring=!isRecurring;
-  const track=document.getElementById('recurring-toggle'), thumb=document.getElementById('recurring-thumb');
-  track.classList.toggle('bg-primary',isRecurring); track.classList.toggle('bg-outline-variant',!isRecurring);
-  thumb.style.cssText=isRecurring?'top:.25rem;left:.25rem;right:auto':'top:.25rem;right:.25rem;left:auto';
-  document.getElementById('recurring-options').classList.toggle('hidden',!isRecurring);
-}
-
-function toggleInstallments(){
-  isInstall=!isInstall;
-  const track=document.getElementById('install-toggle'), thumb=document.getElementById('install-thumb');
-  track.classList.toggle('bg-primary',isInstall); track.classList.toggle('bg-outline-variant',!isInstall);
-  thumb.style.cssText=isInstall?'top:.25rem;left:.25rem;right:auto':'top:.25rem;right:.25rem;left:auto';
-  document.getElementById('install-fields').classList.toggle('hidden',!isInstall);
-  if(!isInstall) document.getElementById('installment-preview').classList.add('hidden');
-  else updateInstallmentPreview();
+  const grid=document.getElementById('tx-mode-grid');
+  const installBtn=document.getElementById('mode-btn-installments');
+  if(type==='expense'){
+    installBtn.classList.remove('hidden');
+    grid.className='grid grid-cols-2 gap-3';
+  } else {
+    installBtn.classList.add('hidden');
+    grid.className='grid grid-cols-1 gap-3';
+    if(txModeState==='installments'){
+      txModeState=null; isInstall=false;
+      _resetModeCards();
+      document.getElementById('install-fields').classList.add('hidden');
+      document.getElementById('installment-preview').classList.add('hidden');
+    }
+  }
 }
 
 function updateInstallmentPreview(){
@@ -1583,8 +1652,10 @@ function triggerConfetti(){
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-function init(){
+async function init(){
   try{
+    document.getElementById('loading-bar').style.width='50%';
+    await loadFromSupabase();
     document.getElementById('loading-bar').style.width='100%';
     setTimeout(()=>{
       document.getElementById('loading-overlay').classList.add('fade-out');
@@ -1593,7 +1664,7 @@ function init(){
       const hash=window.location.hash.replace('#','')||'dashboard';
       navigateTo(hash);
       setRange(currentRange);
-    },1000);
+    },400);
   } catch(err){
     console.error(err);
     document.getElementById('error-boundary').classList.remove('hidden');
