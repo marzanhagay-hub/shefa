@@ -2,7 +2,7 @@
   "name": "שפע - ניהול פיננסי אישי",
   "short_name": "שפע",
   "description": "מערכת לניהול פיננסי אישי המעניקה שקט נפשי דרך הצגת היתרה הריאלית הפנויה",
-  "start_url": "/index.html",
+  "start_url": "/shefa/",
   "display": "standalone",
   "background_color": "#f8f9fa",
   "theme_color": "#031631",
